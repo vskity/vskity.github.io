@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>String on vskity</title>
-    <link>//vskity.cn/tags/string/</link>
+    <link>//vskity.github.io/tags/string/</link>
     <description>Recent content in String on vskity</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>All rights reserved  2016-2018</copyright>
     <lastBuildDate>Sun, 03 Sep 2017 12:57:15 +0800</lastBuildDate>
     
-	<atom:link href="//vskity.cn/tags/string/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="//vskity.github.io/tags/string/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>String连接性能测试</title>
-      <link>//vskity.cn/post/benchmarkstring/</link>
+      <link>//vskity.github.io/post/benchmarkstring/</link>
       <pubDate>Sun, 03 Sep 2017 12:57:15 +0800</pubDate>
       
-      <guid>//vskity.cn/post/benchmarkstring/</guid>
+      <guid>//vskity.github.io/post/benchmarkstring/</guid>
       <description>Golang String类型 连接性能测试 BenchmarkTest strings.Join() 代码如下：
 func BenchmarkString(b *testing.B) { str := strings.Repeat(&amp;quot;r&amp;quot;, n) // n=[20,400,8000] var dst string for i := 0; i &amp;lt; b.N; i++ { dst = strings.Join([]string{dst}, str) } }   第一组 每次连接长度为20
 goos: windows goarch: amd64 pkg: github.com/vskity/test BenchmarkString-4 300000000 5.24 ns/op 0 B/op 0 allocs/op BenchmarkString-4 300000000 5.20 ns/op 0 B/op 0 allocs/op BenchmarkString-4 300000000 5.28 ns/op 0 B/op 0 allocs/op BenchmarkString-4 300000000 5.</description>

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>C&#43;&#43; on vskity</title>
-    <link>//vskity.cn/tags/c&#43;&#43;/</link>
+    <link>//vskity.github.io/tags/c&#43;&#43;/</link>
     <description>Recent content in C&#43;&#43; on vskity</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>All rights reserved  2016-2018</copyright>
     <lastBuildDate>Thu, 10 May 2018 14:53:45 +0800</lastBuildDate>
     
-	<atom:link href="//vskity.cn/tags/c++/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="//vskity.github.io/tags/c++/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>c&#43;&#43;编写一个自己的EOS合约</title>
-      <link>//vskity.cn/post/eos-04/</link>
+      <link>//vskity.github.io/post/eos-04/</link>
       <pubDate>Thu, 10 May 2018 14:53:45 +0800</pubDate>
       
-      <guid>//vskity.cn/post/eos-04/</guid>
+      <guid>//vskity.github.io/post/eos-04/</guid>
       <description>启动单链  直接启动nodeos这一部分已经讲述，这里不再重复。
  新建hello文件夹 mkdir hello 新建文件hello.cpp touch hello.cpp 编写合约代码,代码如下：  #include &amp;lt;eosiolib/eosio.hpp&amp;gt; #include &amp;lt;eosiolib/print.hpp&amp;gt; using namespace eosio; class hello : public eosio::contract { public: using contract::contract; /// @abi action void hi( account_name user ) { print( &amp;quot;Hello, &amp;quot;, name{user} ); } }; EOSIO_ABI( hello, (hi) )   编译合约文件，编译成web assembly文件   eosiocpp -o hello.wast hello.cpp
 编译会有很多提示后者警告，先不用管
@@ -26,10 +26,10 @@
     
     <item>
       <title>一些常见的问题</title>
-      <link>//vskity.cn/post/question/</link>
+      <link>//vskity.github.io/post/question/</link>
       <pubDate>Thu, 30 Nov 2017 15:12:17 +0800</pubDate>
       
-      <guid>//vskity.cn/post/question/</guid>
+      <guid>//vskity.github.io/post/question/</guid>
       <description>面试题 一些常见的问题  智能指针的原理，常用的智能指针
 原文在这里C++11中智能指针的原理、使用、实现
 C++程序设计中使用堆内存是非常频繁的操作，堆内存的申请和释放都由程序员自己管理。程序员自己管理堆内存可以提高了程序的效率，但是整体来说堆内存的管理是麻烦的，C++11中引入了智能指针的概念，方便管理堆内存。使用普通指针，容易造成堆内存泄露（忘记释放），二次释放，程序发生异常时内存泄露等问题等，使用智能指针能更好的管理堆内存。

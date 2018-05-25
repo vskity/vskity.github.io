@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Golang on vskity</title>
-    <link>//vskity.cn/tags/golang/</link>
+    <link>//vskity.github.io/tags/golang/</link>
     <description>Recent content in Golang on vskity</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>All rights reserved  2016-2018</copyright>
     <lastBuildDate>Sun, 03 Sep 2017 12:57:15 +0800</lastBuildDate>
     
-	<atom:link href="//vskity.cn/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="//vskity.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>String连接性能测试</title>
-      <link>//vskity.cn/post/benchmarkstring/</link>
+      <link>//vskity.github.io/post/benchmarkstring/</link>
       <pubDate>Sun, 03 Sep 2017 12:57:15 +0800</pubDate>
       
-      <guid>//vskity.cn/post/benchmarkstring/</guid>
+      <guid>//vskity.github.io/post/benchmarkstring/</guid>
       <description>Golang String类型 连接性能测试 BenchmarkTest strings.Join() 代码如下：
 func BenchmarkString(b *testing.B) { str := strings.Repeat(&amp;quot;r&amp;quot;, n) // n=[20,400,8000] var dst string for i := 0; i &amp;lt; b.N; i++ { dst = strings.Join([]string{dst}, str) } }   第一组 每次连接长度为20
 goos: windows goarch: amd64 pkg: github.com/vskity/test BenchmarkString-4 300000000 5.24 ns/op 0 B/op 0 allocs/op BenchmarkString-4 300000000 5.20 ns/op 0 B/op 0 allocs/op BenchmarkString-4 300000000 5.28 ns/op 0 B/op 0 allocs/op BenchmarkString-4 300000000 5.</description>
@@ -24,19 +24,19 @@ goos: windows goarch: amd64 pkg: github.com/vskity/test BenchmarkString-4 300000
     
     <item>
       <title>golang变量</title>
-      <link>//vskity.cn/post/golang_variable/</link>
+      <link>//vskity.github.io/post/golang_variable/</link>
       <pubDate>Mon, 19 Jun 2017 14:10:33 +0800</pubDate>
       
-      <guid>//vskity.cn/post/golang_variable/</guid>
+      <guid>//vskity.github.io/post/golang_variable/</guid>
       <description>Golang变量 变量基础类型    类型 大小     bool 1   byte 1   uint8 1   int8 1   int16 2   uint16 2   rune 4   int32 4   uint32 4   float32 4   int64 8   uint64 8   float64 8   complex64 8   string 16   complex128 16    特殊变量    类型 大小     struct{} 0   int 8   uint 8   map[&amp;hellip;]&amp;hellip; 8   func() 8   interface{} 16   [&amp;hellip;]slice 24     int uint 不同平台可能不一致  具体代码如下</description>
     </item>
     
     <item>
       <title>NAT</title>
-      <link>//vskity.cn/post/nat/</link>
+      <link>//vskity.github.io/post/nat/</link>
       <pubDate>Tue, 04 Apr 2017 21:46:04 +0800</pubDate>
       
-      <guid>//vskity.cn/post/nat/</guid>
+      <guid>//vskity.github.io/post/nat/</guid>
       <description>NAT分类 详情看这里 NAT专题  静态NAT(需要大量公网IP)
  动态NAT
  NAPT (我们目前使用最多)

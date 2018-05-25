@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Linux on vskity</title>
-    <link>//vskity.cn/tags/linux/</link>
+    <link>//vskity.github.io/tags/linux/</link>
     <description>Recent content in Linux on vskity</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>All rights reserved  2016-2018</copyright>
     <lastBuildDate>Thu, 30 Nov 2017 15:12:17 +0800</lastBuildDate>
     
-	<atom:link href="//vskity.cn/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="//vskity.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>一些常见的问题</title>
-      <link>//vskity.cn/post/question/</link>
+      <link>//vskity.github.io/post/question/</link>
       <pubDate>Thu, 30 Nov 2017 15:12:17 +0800</pubDate>
       
-      <guid>//vskity.cn/post/question/</guid>
+      <guid>//vskity.github.io/post/question/</guid>
       <description>面试题 一些常见的问题  智能指针的原理，常用的智能指针
 原文在这里C++11中智能指针的原理、使用、实现
 C++程序设计中使用堆内存是非常频繁的操作，堆内存的申请和释放都由程序员自己管理。程序员自己管理堆内存可以提高了程序的效率，但是整体来说堆内存的管理是麻烦的，C++11中引入了智能指针的概念，方便管理堆内存。使用普通指针，容易造成堆内存泄露（忘记释放），二次释放，程序发生异常时内存泄露等问题等，使用智能指针能更好的管理堆内存。

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>区块链 on vskity</title>
-    <link>//vskity.cn/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/</link>
+    <link>//vskity.github.io/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/</link>
     <description>Recent content in 区块链 on vskity</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>All rights reserved  2016-2018</copyright>
     <lastBuildDate>Tue, 08 May 2018 15:12:17 +0800</lastBuildDate>
     
-	<atom:link href="//vskity.cn/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="//vskity.github.io/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>EOS智能合约</title>
-      <link>//vskity.cn/post/eos-03/</link>
+      <link>//vskity.github.io/post/eos-03/</link>
       <pubDate>Tue, 08 May 2018 15:12:17 +0800</pubDate>
       
-      <guid>//vskity.cn/post/eos-03/</guid>
+      <guid>//vskity.github.io/post/eos-03/</guid>
       <description>以发Token为例，对EOS的一些操作
  创建钱包  参数-n 指定钱包的名称,默认是default 默认钱包地址 ~/.local/share/eosio/nodeos/data/default.wallet
 $ cleos wallet create -n test Creating wallet: test Save password to use in the future to unlock this wallet. Without password imported keys will not be retrievable. &amp;quot;PW5JVWEDqSv88YvPNkb3CNFkFARQisPw1uRBrySM7tgJYZB3EVTxS&amp;quot;   查看钱包   列出所有的钱包名 如果钱包是解锁状态 后面会有一个 * 号， 否则就是锁定状态
@@ -25,10 +25,10 @@ $ cleos wallet list Wallets: [ &amp;quot;test&amp;quot; ] $ cleos wallet list Wa
     
     <item>
       <title>EOS搭建单节点测试网络</title>
-      <link>//vskity.cn/post/eos-02/</link>
+      <link>//vskity.github.io/post/eos-02/</link>
       <pubDate>Thu, 03 May 2018 15:12:17 +0800</pubDate>
       
-      <guid>//vskity.cn/post/eos-02/</guid>
+      <guid>//vskity.github.io/post/eos-02/</guid>
       <description>默认的配置文件位置在
  Ubuntu ~/.local/share/eosio/nodeos/config macOS ~/Library/Application Support/eosio/nodeos/config  启动nodeos cd build/programs/nodeos ./nodeos -e -p eosio --plugin eosio::wallet_api_plugin --plugin eosio::chain_api_plugin --plugin eosio::account_history_api_plugin  出现 generated block #2 @ 2017-09-04T04:26:18 with 0 trxs 0 pending 表示已经启动，并正常出快
 通过cli来查看 $ ./cleos get info
@@ -38,10 +38,10 @@ $ cleos wallet list Wallets: [ &amp;quot;test&amp;quot; ] $ cleos wallet list Wa
     
     <item>
       <title>EOS介绍</title>
-      <link>//vskity.cn/post/eos-01/</link>
+      <link>//vskity.github.io/post/eos-01/</link>
       <pubDate>Tue, 01 May 2018 15:12:17 +0800</pubDate>
       
-      <guid>//vskity.cn/post/eos-01/</guid>
+      <guid>//vskity.github.io/post/eos-01/</guid>
       <description>EOS 详细的介绍在这里 EOS-Wiki
 环境准备  EOS是基于C++14进行开发，使用CMake进行编译管理 使用 clang 4.0.0 和 CMake 3.8.0 进行开发编译 EOS 使用 WebAssembly 编译和运行智能合约，因此需要使用 WASM 编译器 EOS依赖：  Boost 1.64 OpenSSL LLVM 4.0 secp256k1-zkp   源码获取 git clone https://github.com/EOSIO/eos --recursive
  如果clone时没有使用 --recursive 参数，用git submodule update --init --recursive 下载子模块
