@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>区块链 on vskity</title>
+    <link>//vskity.cn/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/</link>
+    <description>Recent content in 区块链 on vskity</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>All rights reserved  2016-2018</copyright>
+    <lastBuildDate>Tue, 08 May 2018 15:12:17 +0800</lastBuildDate>
+    
+	<atom:link href="//vskity.cn/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>EOS智能合约</title>
+      <link>//vskity.cn/post/eos-03/</link>
+      <pubDate>Tue, 08 May 2018 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/eos-03/</guid>
+      <description>以发Token为例，对EOS的一些操作
+ 创建钱包  参数-n 指定钱包的名称,默认是default 默认钱包地址 ~/.local/share/eosio/nodeos/data/default.wallet
+$ cleos wallet create -n test Creating wallet: test Save password to use in the future to unlock this wallet. Without password imported keys will not be retrievable. &amp;quot;PW5JVWEDqSv88YvPNkb3CNFkFARQisPw1uRBrySM7tgJYZB3EVTxS&amp;quot;   查看钱包   列出所有的钱包名 如果钱包是解锁状态 后面会有一个 * 号， 否则就是锁定状态
+$ cleos wallet list Wallets: [ &amp;quot;test&amp;quot; ] $ cleos wallet list Wallets: [ &amp;quot;test *&amp;quot; ]   钱包解锁  参数-n指定钱包名，默认default 输入钱包密码即可解锁(密码是创建钱包时提示的)</description>
+    </item>
+    
+    <item>
+      <title>EOS搭建单节点测试网络</title>
+      <link>//vskity.cn/post/eos-02/</link>
+      <pubDate>Thu, 03 May 2018 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/eos-02/</guid>
+      <description>默认的配置文件位置在
+ Ubuntu ~/.local/share/eosio/nodeos/config macOS ~/Library/Application Support/eosio/nodeos/config  启动nodeos cd build/programs/nodeos ./nodeos -e -p eosio --plugin eosio::wallet_api_plugin --plugin eosio::chain_api_plugin --plugin eosio::account_history_api_plugin  出现 generated block #2 @ 2017-09-04T04:26:18 with 0 trxs 0 pending 表示已经启动，并正常出快
+通过cli来查看 $ ./cleos get info
+{ &amp;quot;server_version&amp;quot;: &amp;quot;45fb9218&amp;quot;, &amp;quot;head_block_num&amp;quot;: 1317, &amp;quot;last_irreversible_block_num&amp;quot;: 1316, &amp;quot;head_block_id&amp;quot;: &amp;quot;00000525480e657589815cbc2ecf78d55dd33aba3a782c3f4deae6a8a934f613&amp;quot;, &amp;quot;head_block_time&amp;quot;: &amp;quot;2018-05-07T08:56:18&amp;quot;, &amp;quot;head_block_producer&amp;quot;: &amp;quot;eosio&amp;quot; }  $ ./cleos get block 00000525480e657589815cbc2ecf78d55dd33aba3a782c3f4deae6a8a934f613
+{ &amp;quot;previous&amp;quot;: &amp;quot;000005248ca5f3839afb2dd8ca2830f4a7cd08580675980b256b9805c6ece99c&amp;quot;, &amp;quot;timestamp&amp;quot;: &amp;quot;2018-05-07T08:56:18.500&amp;quot;, &amp;quot;transaction_mroot&amp;quot;: &amp;quot;bdd887f563e9d0ac973ca861b302a3deb383d22ca451f7ef7642811983c5004c&amp;quot;, &amp;quot;action_mroot&amp;quot;: &amp;quot;a183383165931ee7d399140c231ffb4b04edbb16630fed00989106c4bcf4c32b&amp;quot;, &amp;quot;block_mroot&amp;quot;: &amp;quot;4b297f80126fd0925829ac320de500fb1cb61605214679ba0c20d9fb470512e0&amp;quot;, &amp;quot;producer&amp;quot;: &amp;quot;eosio&amp;quot;, &amp;quot;schedule_version&amp;quot;: 0, &amp;quot;new_producers&amp;quot;: null, &amp;quot;producer_signature&amp;quot;: &amp;quot;SIG_K1_Kiru1RH1m7bwB6tKoytpdnp657MdUNnZ1Ea1bfsSgnCvsRcHsmbXE2N9VPB3Gf25oPDtRp6WNj7YsJfw1N2g3aP6pStMAu&amp;quot;, &amp;quot;regions&amp;quot;: [{ &amp;quot;region&amp;quot;: 0, &amp;quot;cycles_summary&amp;quot;: [[{ &amp;quot;read_locks&amp;quot;: [], &amp;quot;write_locks&amp;quot;: [], &amp;quot;transactions&amp;quot;: [{ &amp;quot;status&amp;quot;: &amp;quot;executed&amp;quot;, &amp;quot;kcpu_usage&amp;quot;: 2, &amp;quot;net_usage_words&amp;quot;: 38, &amp;quot;id&amp;quot;: &amp;quot;48c3c04ceaf920eb28300517c22c593317ca77789765b12f77806344d803ad0c&amp;quot; } ] } ] ] } ], &amp;quot;input_transactions&amp;quot;: [], &amp;quot;id&amp;quot;: &amp;quot;00000525480e657589815cbc2ecf78d55dd33aba3a782c3f4deae6a8a934f613&amp;quot;, &amp;quot;block_num&amp;quot;: 1317, &amp;quot;ref_block_prefix&amp;quot;: 3160179081 }  通过rpc来查看  curl http://127.</description>
+    </item>
+    
+    <item>
+      <title>EOS介绍</title>
+      <link>//vskity.cn/post/eos-01/</link>
+      <pubDate>Tue, 01 May 2018 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/eos-01/</guid>
+      <description>EOS 详细的介绍在这里 EOS-Wiki
+环境准备  EOS是基于C++14进行开发，使用CMake进行编译管理 使用 clang 4.0.0 和 CMake 3.8.0 进行开发编译 EOS 使用 WebAssembly 编译和运行智能合约，因此需要使用 WASM 编译器 EOS依赖：  Boost 1.64 OpenSSL LLVM 4.0 secp256k1-zkp   源码获取 git clone https://github.com/EOSIO/eos --recursive
+ 如果clone时没有使用 --recursive 参数，用git submodule update --init --recursive 下载子模块
+ 编译 系统要求  8G 内存 20G 硬盘  依赖安装 EOS提供了安装依赖脚本在eos/scripts/eosio_build_*.sh 包括了amazon、ubuntu、centos、darwin、dep、fedorad等 - Amazon 2017.09 and higher. - Centos 7. - Fedora 25 and higher (Fedora 27 recommended).</description>
+    </item>
+    
+  </channel>
+</rss>

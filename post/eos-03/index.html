@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>EOS智能合约 &middot; vskity</title>
+    <meta name="author" content="vskity">
+    <meta name="description" content="Every noble work is at first impossible.">
+    <meta name="generator" content="Hugo 0.40.3" />
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- RSS autodiscovery -->
+    
+
+    <link rel="shortcut icon" href="//vskity.cn/img/favicon.ico">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="//vskity.cn/css/screen.css">
+    <link rel="stylesheet" href="//vskity.cn/css/github.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+    
+
+    
+    <link rel="shortcut icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    
+
+    <!-- Stylesheet for theme color -->
+    <style type="text/css">
+    a, a:visited {color: #33cc99;}
+    .pagination a {color: #33cc99;}
+    .gist .gist-file .gist-meta a:visited {color: #33cc99 !important;}
+    a:focus, a:hover {color: #178b6b;}
+    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #178b6b;}
+    .older-posts:hover, .newer-posts:hover {color: #178b6b;}
+</style>
+</head>
+
+<body class="home-template">
+    <header id="site-head">
+	
+	<h1 class="blog-title"><a href="//vskity.cn/">vskity&rsquo;s blog</a></h1>
+	
+	
+</header>
+    
+<nav class="menu" role="nav">
+    <ul>
+        
+        	<li class="nav nav-current"><a href="//vskity.cn/about/">About me</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/phabricator/">Docker中phabricator搭建配置</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-01/">EOS介绍</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-02/">EOS搭建单节点测试网络</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-03/">EOS智能合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/nat/">NAT</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/benchmarkstring/">String连接性能测试</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-04/">c&#43;&#43;编写一个自己的EOS合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/golang_variable/">golang变量</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/question/">一些常见的问题</a></li>
+      	
+    </ul>
+</nav>
+
+    
+    <main class="content" role="main">
+    
+<article class="post">
+    <header>
+        <h1 class="post-title">EOS智能合约</h1>
+        <div class="post-meta">
+            <time datetime="08 May 2018">
+                08 May 2018
+            </time>
+        </div>
+    </header>
+
+    <section class="post-content">
+        <p>以发Token为例，对EOS的一些操作</p>
+
+<ul>
+<li>创建钱包</li>
+</ul>
+
+<p>参数-n 指定钱包的名称,默认是default  <br />
+  默认钱包地址 <code>~/.local/share/eosio/nodeos/data/default.wallet</code></p>
+
+<pre><code class="language-bash">  $ cleos wallet create -n test
+  Creating wallet: test
+  Save password to use in the future to unlock this wallet.
+  Without password imported keys will not be retrievable.
+  &quot;PW5JVWEDqSv88YvPNkb3CNFkFARQisPw1uRBrySM7tgJYZB3EVTxS&quot;
+</code></pre>
+
+<ul>
+<li>查看钱包
+<br /></li>
+</ul>
+
+<p>列出所有的钱包名
+  如果钱包是解锁状态 后面会有一个 <code>*</code> 号， <br />
+  否则就是锁定状态</p>
+
+<pre><code class="language-bash">  $ cleos wallet list
+  Wallets:
+  [
+    &quot;test&quot;
+  ]
+
+  $ cleos wallet list
+  Wallets:
+  [
+    &quot;test *&quot;
+  ]
+</code></pre>
+
+<ul>
+<li>钱包解锁</li>
+</ul>
+
+<p>参数<code>-n</code>指定钱包名，默认default <br />
+  输入钱包密码即可解锁(密码是创建钱包时提示的)</p>
+
+<pre><code class="language-bash">  $ cleos wallet unlock -n test
+  password: Unlocked: test
+</code></pre>
+
+<ul>
+<li>锁定钱包</li>
+</ul>
+
+<p>参数<code>-n</code>指定钱包名，默认default</p>
+
+<pre><code class="language-bash">  $ cleos wallet lock -n test
+  Locked: test
+</code></pre>
+
+<ul>
+<li>新建公私钥</li>
+</ul>
+
+<pre><code class="language-bash">  $ cleos create key 
+  Private key: 5KZ4HsWZtYV1eJQwZncWpcN1zoV4YuSeKdLLoL2rTzgnJTPrD8M
+  Public key: EOS6Za8FShgxM12zuevvamWeZwYSvcUtaWWVgE6FohCEP1Le5jjfe
+</code></pre>
+
+<ul>
+<li>导入到钱包</li>
+</ul>
+
+<pre><code class="language-bash">  $ cleos create account EOS6Za8FShgxM12zuevvamWeZwYSvcUtaWWVgE6FohCEP1Le5jjfe
+</code></pre>
+
+<ul>
+<li>查看钱包中已经存在的公私钥</li>
+</ul>
+
+<pre><code class="language-bash">  $ cleos wallet keys
+  [[
+      &quot;EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV&quot;,
+      &quot;5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3&quot;
+    ],[
+      &quot;EOS6vJhV1RE4K2hwjPX14hou1kd8CUuQ3qyCLQqyQsUHmHBfahXjL&quot;,
+      &quot;5JuGpCBnCs7uZ2yJcgiSFQTMRBFeohMisYna8zdVwJm5ynRAeZu&quot;
+    ]
+  ] 
+</code></pre>
+
+<ul>
+<li>部署合约</li>
+</ul>
+
+<p>EOS代码中内置了很多合约，我们以eosio.token为例 <br />
+  这里表示tom账户授权新建一个名叫tom的合约 <br />
+  <code>- p</code> 参数指定授权账户</p>
+
+<pre><code class="language-bash">  $ cleos set contract tom build/contracts/eosio.token -p tom   
+  Reading WAST/WASM from build/contracts/eosio.token/eosio.token.wast...
+  Assembling WASM...
+  Publishing contract...
+  executed transaction: 0661c9dc813a5c7847b970e701aec13df7506443412f0875fe9605656b0a8d41    8320 bytes  2200576 cycles
+  #         eosio &lt;= eosio::setcode               {&quot;account&quot;:&quot;tom&quot;,&quot;vmtype&quot;:0,&quot;vmversion&quot;:0,  &quot;code&quot;:&quot;0061736d010000000181011560067f7e7f7f7f7f0060057f7e...
+  #         eosio &lt;= eosio::setabi                {&quot;account&quot;:&quot;tom&quot;,&quot;abi&quot;:{&quot;types&quot;:[],  &quot;structs&quot;:[{&quot;name&quot;:&quot;transfer&quot;,&quot;base&quot;:&quot;&quot;,&quot;fields&quot;:[{&quot;name&quot;:&quot;from&quot;,...
+</code></pre>
+
+<ul>
+<li>创建一个Token</li>
+</ul>
+
+<p>合约中create需要的参数有五个，分别是发行人、资产、是否能冻结、能再次调用、白名单</p>
+
+<pre><code class="language-C++">  void token::create( account_name issuer,
+                      asset        maximum_supply,
+                      uint8_t      issuer_can_freeze,
+                      uint8_t      issuer_can_recall,
+                      uint8_t      issuer_can_whitelist )
+  {
+      require_auth( _self );
+  
+      auto sym = maximum_supply.symbol;
+      eosio_assert( sym.is_valid(), &quot;invalid symbol name&quot; );
+      eosio_assert( maximum_supply.is_valid(), &quot;invalid supply&quot;);
+      eosio_assert( maximum_supply.amount &gt; 0, &quot;max-supply must be positive&quot;);
+  
+      stats statstable( _self, sym.name() );
+      auto existing = statstable.find( sym.name() );
+      eosio_assert( existing == statstable.end(), &quot;token with symbol already exists&quot; );
+  
+      statstable.emplace( _self, [&amp;]( auto&amp; s ) {
+         s.supply.symbol = maximum_supply.symbol;
+         s.max_supply    = maximum_supply;
+         s.issuer        = issuer;
+         s.can_freeze    = issuer_can_freeze;
+         s.can_recall    = issuer_can_recall;
+         s.can_whitelist = issuer_can_whitelist;
+      });
+  } 
+</code></pre>
+
+<blockquote>
+<p>account_name 不能超过13个字符，只能包含<code>.12345abcdefghijklmnopqrstuvwxyz</code>中</p>
+</blockquote>
+
+<pre><code class="language-bash">  $ cleos push action tom create '[ &quot;tom&quot;, &quot;100000000.0000 BTC&quot;, 0, 0, 0]' -p tom
+  executed transaction: f3e7fc29b45c907f5fc514f8904f54ed10eb0ebf476008af98b1f87fb0b21a87  248 bytes   104448 cycles
+  #           tom &lt;= tom::create                  {&quot;issuer&quot;:&quot;tom&quot;,&quot;maximum_supply&quot;:&quot;100000000.0000  BTC&quot;,&quot;can_freeze&quot;:0,&quot;can_recall&quot;:0,&quot;can_whitelist&quot;:...
+</code></pre>
+
+<ul>
+<li>发行Token</li>
+</ul>
+
+<pre><code class="language-c++">  void token::issue( account_name to, asset quantity, string memo )
+  {
+      print( &quot;issue&quot; );
+      auto sym = quantity.symbol.name();
+      stats statstable( _self, sym );
+      const auto&amp; st = statstable.get( sym );
+  
+      require_auth( st.issuer );
+      eosio_assert( quantity.is_valid(), &quot;invalid quantity&quot; );
+      eosio_assert( quantity.amount &gt; 0, &quot;must issue positive quantity&quot; );
+      eosio_assert( quantity &lt;= st.max_supply - st.supply, &quot;quantity exceeds available supply&quot;);
+  
+      statstable.modify( st, 0, [&amp;]( auto&amp; s ) {
+         s.supply += quantity;
+      });
+  
+      add_balance( st.issuer, quantity, st, st.issuer );
+  
+      if( to != st.issuer )
+      {
+         SEND_INLINE_ACTION( *this, transfer, {st.issuer,N(active)}, {st.issuer, to, quantity, memo} );
+      }
+  }
+</code></pre>
+
+<p>如果没有备注，最后一个参数可以不填 &ldquo;&rdquo;,</p>
+
+<pre><code class="language-bash">  $ cleos push action tom issue '[&quot;tom&quot;,&quot;1000000.0000 BTC&quot;, &quot;tim&quot;]' -p tom
+  executed transaction: 9758173c65c7734352c041984b888324bcfc205710f682a8066a96416701f737  256 bytes  108544 cycles
+  #           tom &lt;= tom::issue                   {&quot;to&quot;:&quot;tom&quot;,&quot;quantity&quot;:&quot;1000000.0000 BTC&quot;,&quot;memo&quot;:&quot;tim&quot;}
+  &gt;&gt; issue
+</code></pre>
+
+<blockquote>
+<p>结果以JSON方式显示 加 <code>-j</code> 参数</p>
+</blockquote>
+
+<pre><code class="language-JSON">  $ cleos push action tom issue '[&quot;tom&quot;,&quot;1000000.0000 BTC&quot;, &quot;tim&quot;]' -p tom -j
+  {
+    &quot;transaction_id&quot;: &quot;bfa3c67f5196bce4f2b7fe1e4f748803885f7d15272ad1f3350517fec77e4d26&quot;,
+    &quot;processed&quot;: {
+      &quot;status&quot;: &quot;executed&quot;,
+      &quot;kcpu_usage&quot;: 106,
+      &quot;net_usage_words&quot;: 32,
+      &quot;id&quot;: &quot;bfa3c67f5196bce4f2b7fe1e4f748803885f7d15272ad1f3350517fec77e4d26&quot;,
+      &quot;action_traces&quot;: [{
+          &quot;receiver&quot;: &quot;tom&quot;,
+          &quot;context_free&quot;: false,
+          &quot;cpu_usage&quot;: 6168,
+          &quot;act&quot;: {
+            &quot;account&quot;: &quot;tom&quot;,
+            &quot;name&quot;: &quot;issue&quot;,
+            &quot;authorization&quot;: [{
+                &quot;actor&quot;: &quot;tom&quot;,
+                &quot;permission&quot;: &quot;active&quot;
+              }
+            ],
+            &quot;data&quot;: {
+              &quot;to&quot;: &quot;tom&quot;,
+              &quot;quantity&quot;: &quot;1000000.0000 BTC&quot;,
+              &quot;memo&quot;: &quot;tim&quot;
+            },
+            &quot;hex_data&quot;: &quot;00000000000024cd00e40b540200000004425443000000000374696d&quot;
+          },
+          &quot;console&quot;: &quot;issue&quot;,
+          &quot;data_access&quot;: [{
+              &quot;type&quot;: &quot;write&quot;,
+              &quot;code&quot;: &quot;tom&quot;,
+              &quot;scope&quot;: &quot;........che42&quot;,
+              &quot;sequence&quot;: 2
+            },{
+              &quot;type&quot;: &quot;write&quot;,
+              &quot;code&quot;: &quot;tom&quot;,
+              &quot;scope&quot;: &quot;tom&quot;,
+              &quot;sequence&quot;: 2
+            }
+          ],
+          &quot;_profiling_us&quot;: 302
+        }
+      ],
+      &quot;deferred_transaction_requests&quot;: [],
+      &quot;read_locks&quot;: [],
+      &quot;write_locks&quot;: [{
+          &quot;account&quot;: &quot;tom&quot;,
+          &quot;scope&quot;: &quot;........che42&quot;
+        },{
+          &quot;account&quot;: &quot;tom&quot;,
+          &quot;scope&quot;: &quot;tom&quot;
+        }
+      ],
+      &quot;cpu_usage&quot;: 108544,
+      &quot;net_usage&quot;: 256,
+      &quot;packed_trx_digest&quot;: &quot;0be15ec898dbec881e2aeb9475c44d8c035cebe636d61cfde2fd991e2f9c0702&quot;,
+      &quot;region_id&quot;: 0,
+      &quot;cycle_index&quot;: 1,
+      &quot;shard_index&quot;: 0,
+      &quot;_profiling_us&quot;: 375,
+      &quot;_setup_profiling_us&quot;: 186
+    }
+  }%
+</code></pre>
+
+<ul>
+<li>查询余额</li>
+</ul>
+
+<pre><code class="language-bash">  $ cleos get currency balance tom tom   
+  2000000.0000 BTC
+</code></pre>
+
+<ul>
+<li>创建账户</li>
+</ul>
+
+<pre><code class="language-json">  $ cleos create account tom  alis  EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV    EOS6Za8FShgxM12zuevvamWeZwYSvcUtaWWVgE6FohCEP1Le5jjfe -j
+  {
+    &quot;transaction_id&quot;: &quot;844eae21467db6760d95bb8e6885dd5bfcf90ce6bc44917241ba2a32e4e18600&quot;,
+    &quot;processed&quot;: {
+      &quot;status&quot;: &quot;executed&quot;,
+      &quot;kcpu_usage&quot;: 100,
+      &quot;net_usage_words&quot;: 44,
+      &quot;id&quot;: &quot;844eae21467db6760d95bb8e6885dd5bfcf90ce6bc44917241ba2a32e4e18600&quot;,
+      &quot;action_traces&quot;: [{
+          &quot;receiver&quot;: &quot;eosio&quot;,
+          &quot;context_free&quot;: false,
+          &quot;cpu_usage&quot;: 0,
+          &quot;act&quot;: {
+            &quot;account&quot;: &quot;eosio&quot;,
+            &quot;name&quot;: &quot;newaccount&quot;,
+            &quot;authorization&quot;: [{
+                &quot;actor&quot;: &quot;tom&quot;,
+                &quot;permission&quot;: &quot;active&quot;
+              }
+            ],
+            &quot;data&quot;: {
+              &quot;creator&quot;: &quot;tom&quot;,
+              &quot;name&quot;: &quot;alis&quot;,
+              &quot;owner&quot;: {
+                &quot;threshold&quot;: 1,
+                &quot;keys&quot;: [{
+                    &quot;key&quot;: &quot;EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV&quot;,
+                    &quot;weight&quot;: 1
+                  }
+                ],
+                &quot;accounts&quot;: []
+              },
+              &quot;active&quot;: {
+                &quot;threshold&quot;: 1,
+                &quot;keys&quot;: [{
+                    &quot;key&quot;: &quot;EOS6Za8FShgxM12zuevvamWeZwYSvcUtaWWVgE6FohCEP1Le5jjfe&quot;,
+                    &quot;weight&quot;: 1
+                  }
+                ],
+                &quot;accounts&quot;: []
+              },
+              &quot;recovery&quot;: {
+                &quot;threshold&quot;: 1,
+                &quot;keys&quot;: [],
+                &quot;accounts&quot;: [{
+                    &quot;permission&quot;: {
+                      &quot;actor&quot;: &quot;tom&quot;,
+                      &quot;permission&quot;: &quot;active&quot;
+                    },
+                    &quot;weight&quot;: 1
+                  }
+                ]
+              }
+            },
+            &quot;hex_data&quot;:   &quot;00000000000024cd0000000000805d3401000000010002c0ded2bc1f1305fb0faac5e6c03ee3a192423498542  7b6167ca569d13df435cf01000001000000010002dc6febae8d8c9e8bf5dd4730073dc725e34bd32110618cdaf  109c0567ca293f401000001000000000100000000000024cd00000000a8ed32320100&quot;
+          },
+          &quot;console&quot;: &quot;&quot;,
+          &quot;data_access&quot;: [{
+              &quot;type&quot;: &quot;write&quot;,
+              &quot;code&quot;: &quot;eosio&quot;,
+              &quot;scope&quot;: &quot;eosio.auth&quot;,
+              &quot;sequence&quot;: 3
+            }
+          ],
+          &quot;_profiling_us&quot;: 42
+        }
+      ],
+      &quot;deferred_transaction_requests&quot;: [],
+      &quot;read_locks&quot;: [],
+      &quot;write_locks&quot;: [{
+          &quot;account&quot;: &quot;eosio&quot;,
+          &quot;scope&quot;: &quot;eosio.auth&quot;
+        }
+      ],
+      &quot;cpu_usage&quot;: 102400,
+      &quot;net_usage&quot;: 352,
+      &quot;packed_trx_digest&quot;: &quot;c4c6c3d2c0b2f0ed97215ad2c7f504db1f109d61aacbfe1a1e4baf06b4aad823&quot;,
+      &quot;region_id&quot;: 0,
+      &quot;cycle_index&quot;: 1,
+      &quot;shard_index&quot;: 0,
+      &quot;_profiling_us&quot;: 93,
+      &quot;_setup_profiling_us&quot;: 109
+    }
+  }%
+</code></pre>
+
+<ul>
+<li>查询公钥下的账户</li>
+</ul>
+
+<pre><code class="language-bash">  $ cleos get accounts EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+  {
+    &quot;account_names&quot;: [
+      &quot;alis&quot;,
+      &quot;bob&quot;,
+      &quot;tom&quot;
+    ]
+  }
+  
+  $ cleos get accounts EOS6Za8FShgxM12zuevvamWeZwYSvcUtaWWVgE6FohCEP1Le5jjfe
+  {
+    &quot;account_names&quot;: [
+      &quot;alis&quot;,
+      &quot;bob&quot;
+    ]
+  }
+</code></pre>
+
+<ul>
+<li>查看某个账户
+<br /></li>
+</ul>
+
+<pre><code class="language-bash">  $ cleos get account bob
+  {
+    &quot;account_name&quot;: &quot;bob&quot;,
+    &quot;permissions&quot;: [{
+        &quot;perm_name&quot;: &quot;active&quot;,
+        &quot;parent&quot;: &quot;owner&quot;,
+        &quot;required_auth&quot;: {
+          &quot;threshold&quot;: 1,
+          &quot;keys&quot;: [{
+              &quot;key&quot;: &quot;EOS6Za8FShgxM12zuevvamWeZwYSvcUtaWWVgE6FohCEP1Le5jjfe&quot;,
+              &quot;weight&quot;: 1
+            }
+          ],
+          &quot;accounts&quot;: []
+        }
+      },{
+        &quot;perm_name&quot;: &quot;owner&quot;,
+        &quot;parent&quot;: &quot;&quot;,
+        &quot;required_auth&quot;: {
+          &quot;threshold&quot;: 1,
+          &quot;keys&quot;: [{
+              &quot;key&quot;: &quot;EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV&quot;,
+              &quot;weight&quot;: 1
+            }
+          ],
+          &quot;accounts&quot;: []
+        }
+      }
+    ]
+  }
+</code></pre>
+
+<ul>
+<li>合约转帐
+<br /></li>
+</ul>
+
+<pre><code class="language-c++">  void token::transfer( account_name from,
+                        account_name to,
+                        asset        quantity,
+                        string       /*memo*/ )
+  {
+      print( &quot;transfer&quot; );
+      require_auth( from );
+      auto sym = quantity.symbol.name();
+      stats statstable( _self, sym );
+      const auto&amp; st = statstable.get( sym );
+  
+      require_recipient( from );
+      require_recipient( to );
+  
+      eosio_assert( quantity.is_valid(), &quot;invalid quantity&quot; );
+      eosio_assert( quantity.amount &gt; 0, &quot;must transfer positive quantity&quot; );
+  
+      sub_balance( from, quantity, st );
+      add_balance( to, quantity, st, from );
+  }
+</code></pre>
+
+<pre><code class="language-bash">  $ cleos push action tom transfer '[&quot;tom&quot;,&quot;bob&quot;,&quot;1000.0000 BTC&quot;, &quot;&quot;]' -p tom   
+  executed transaction: 3dda396bc2afa89b79e2dd8db27cd1f68f0acd613ab6f6e73462e7f880b9f130  256 bytes  109568 cycles
+  #           tom &lt;= tom::transfer                {&quot;from&quot;:&quot;tom&quot;,&quot;to&quot;:&quot;bob&quot;,&quot;quantity&quot;:&quot;1000.0000 BTC&quot;,&quot;memo&quot;:&quot;&quot;}
+  &gt;&gt; transfer
+  #           bob &lt;= tom::transfer                {&quot;from&quot;:&quot;tom&quot;,&quot;to&quot;:&quot;bob&quot;,&quot;quantity&quot;:&quot;1000.0000 BTC&quot;,&quot;memo&quot;:&quot;&quot;}
+</code></pre>
+
+<ul>
+<li>查询合约tom中的余额(Token)
+<br /></li>
+</ul>
+
+<pre><code class="language-bash">  $ cleos get currency balance tom bob
+  1000.0000 BTC
+
+  $ cleos get currency balance tom tom
+  1999000.0000 BTC
+</code></pre>
+
+<ul>
+<li>转帐bob-&gt;alis
+<br /></li>
+</ul>
+
+<pre><code class="language-bash">  $ cleos push action tom transfer '[&quot;bob&quot;,&quot;alis&quot;,&quot;1000.0000 BTC&quot;, &quot;&quot;]' -p bob
+  executed transaction: dfba6a950d97344c0ebbe1ff7caecf87e47ab68acf6388d940388c0ad00306ad  256 bytes  110592 cycles
+  #           tom &lt;= tom::transfer                {&quot;from&quot;:&quot;bob&quot;,&quot;to&quot;:&quot;alis&quot;,&quot;quantity&quot;:&quot;1000.0000 BTC&quot;,&quot;memo&quot;:&quot;&quot;}
+  &gt;&gt; transfer
+  #           bob &lt;= tom::transfer                {&quot;from&quot;:&quot;bob&quot;,&quot;to&quot;:&quot;alis&quot;,&quot;quantity&quot;:&quot;1000.0000 BTC&quot;,&quot;memo&quot;:&quot;&quot;}
+  #          alis &lt;= tom::transfer                {&quot;from&quot;:&quot;bob&quot;,&quot;to&quot;:&quot;alis&quot;,&quot;quantity&quot;:&quot;1000.0000 BTC&quot;,&quot;memo&quot;:&quot;&quot;}
+</code></pre>
+
+<ul>
+<li>查询余额
+<br /></li>
+</ul>
+
+<pre><code class="language-bash">  $ cleos get currency balance tom alis                                       
+  1000.0000 BTC
+
+  $ cleos get currency balance tom bob 
+  0.0000 BTC
+</code></pre>
+
+    </section>
+
+    
+    <section class="post-tags" style="padding-bottom:60px;">
+        <div class="post-meta tags">
+            <i class="fa fa-fw fa-tag"></i>
+            
+                
+                <a href="//vskity.cn/tags/eos">EOS </a>
+            
+                
+                <a href="//vskity.cn/tags/eos%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C">EOS测试网络 </a>
+            
+                
+                <a href="//vskity.cn/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6">智能合约 </a>
+            
+                
+                <a href="//vskity.cn/tags/blockchain">Blockchain </a>
+            
+                
+                <a href="//vskity.cn/tags/%E5%8C%BA%E5%9D%97%E9%93%BE">区块链 </a>
+            
+        </div>
+    </section>
+    
+    
+    <section class="share">
+    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head"> Back to top</a></p>
+    <p class="info prompt">Share</p>
+    <a href="http://twitter.com/share?text=EOS%e6%99%ba%e8%83%bd%e5%90%88%e7%ba%a6&url=%2f%2fvskity.cn%2fpost%2feos-03%2f" title="Share on Twitter"
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <i class="fa fa-2x fa-fw fa-twitter-square"></i> <span class="hidden">Twitter</span>
+    </a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2f%2fvskity.cn%2fpost%2feos-03%2f" title="Share on Facebook"
+        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i> <span class="hidden">Facebook</span>
+    </a>
+    <a href="https://plus.google.com/share?url=%2f%2fvskity.cn%2fpost%2feos-03%2f" title="Share on Google+"
+       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <i class="fa fa-2x fa-fw fa-google-plus-square" style="margin-left: -8px"></i> <span class="hidden">Google+</span>
+    </a>
+</section>
+
+    <footer class="post-footer">
+        <section class="author">
+    <div class="authorimage" style="background: url(//vskity.cn/img/avatar.jpg)"></div>
+    <h4>vskity</h4>
+    <p class="bio">programmer - golang</p>
+    <p class="meta">
+      
+    </p>
+</section>
+    </footer>
+    
+</article>
+
+    </main>
+
+    <footer class="site-footer">
+	<div class="inner">
+		<section class="footer-social">
+      
+      
+      
+      
+      
+      
+      <a href="//github.com/vskity" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i> <span class="hidden">GitHub</span></a>&nbsp;
+      
+      
+      
+      
+  </section>
+
+		<section class="copyright">&copy; 2018 <a href="//vskity.cn/">vskity</a>. Released under the MIT license.</section>
+	</div>
+</footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//vskity.cn/js/index.js"></script>
+<script src="//vskity.cn/js/smooth-scroll.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+
+
+<script>
+    smoothScroll.init({
+        speed: 800,
+        easing: 'easeInOutCubic',
+        updateURL: false,
+        offset: 125,
+    });
+</script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-100632159-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</body>
+</html>

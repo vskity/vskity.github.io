@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nat on vskity</title>
+    <link>//vskity.cn/tags/nat/</link>
+    <description>Recent content in Nat on vskity</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>All rights reserved  2016-2018</copyright>
+    <lastBuildDate>Tue, 04 Apr 2017 21:46:04 +0800</lastBuildDate>
+    
+	<atom:link href="//vskity.cn/tags/nat/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>NAT</title>
+      <link>//vskity.cn/post/nat/</link>
+      <pubDate>Tue, 04 Apr 2017 21:46:04 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/nat/</guid>
+      <description>NAT分类 详情看这里 NAT专题  静态NAT(需要大量公网IP)
+ 动态NAT
+ NAPT (我们目前使用最多)
+  P2P NAT实现关键点  获取本机在公网地址 IP+Port 获取目标地址(公网) IP+Port 端口绑定 (否则数据包会被丢弃) 实现穿透  NAPT实现 P2P中的NAT打洞方案详解
+ STUN
+它允许位于NAT（或多重NAT）后的客户端找出自己的公网地址， 查出自己位于哪种类型的NAT之后以及NAT为某一个本地端口所绑定的Internet端端口。 这些信息被用来在两个同时处于NAT路由器之后的主机之间建立UDP通信
+ TURN 中继NAT实现的穿透（中介转发，不是P2P）
+所有的数据交换都经由服务器来完成，这样NAT将没有障碍，但服务器的负载、丢包、延迟性就是很大的问题。 目前很多游戏均采用该方式避开NAT的问题
+详细看这里 STUN和TURN技术浅析
+ ALGs NAT ALG原理与应用
+它可以是一个设备或插件，用于支持SIP协议，主要类似与在网关上专门开辟一个通道，用于建立内网与外网的连接， 也就是说，这是一种定制的网关。更多只适用于使用他们的应用群体内部之间。
+ UpnP 浅析UPnP协议
+它是让网关设备在进行工作时寻找一个全球共享的可路由IP来作为通道，这样避免端口造成的影响。 要求设备支持且开启upnp功能，但大部分时候，这些功能处于安全考虑，是被关闭的。
+ ICE 交互式建立连接 ICE原理介绍
+一种综合性的NAT穿越的技术，可整合各种NAT穿透技术，如STUN、TURN（Traversal Using Relay NAT，中继NAT实现的穿透）等
+  Golang package  upnp  https://github.com/prestonTao/upnp https://github.com/huin/goupnp（以太坊使用）  STUN  https://github.com/pixelbender/go-stun  ICE  https://github.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Docker中phabricator搭建配置 &middot; vskity</title>
+    <meta name="author" content="vskity">
+    <meta name="description" content="Every noble work is at first impossible.">
+    <meta name="generator" content="Hugo 0.40.3" />
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- RSS autodiscovery -->
+    
+
+    <link rel="shortcut icon" href="//vskity.cn/img/favicon.ico">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="//vskity.cn/css/screen.css">
+    <link rel="stylesheet" href="//vskity.cn/css/github.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+    
+
+    
+    <link rel="shortcut icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    
+
+    <!-- Stylesheet for theme color -->
+    <style type="text/css">
+    a, a:visited {color: #33cc99;}
+    .pagination a {color: #33cc99;}
+    .gist .gist-file .gist-meta a:visited {color: #33cc99 !important;}
+    a:focus, a:hover {color: #178b6b;}
+    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #178b6b;}
+    .older-posts:hover, .newer-posts:hover {color: #178b6b;}
+</style>
+</head>
+
+<body class="home-template">
+    <header id="site-head">
+	
+	<h1 class="blog-title"><a href="//vskity.cn/">vskity&rsquo;s blog</a></h1>
+	
+	
+</header>
+    
+<nav class="menu" role="nav">
+    <ul>
+        
+        	<li class="nav nav-current"><a href="//vskity.cn/about/">About me</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/phabricator/">Docker中phabricator搭建配置</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-01/">EOS介绍</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-02/">EOS搭建单节点测试网络</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-03/">EOS智能合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/nat/">NAT</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/benchmarkstring/">String连接性能测试</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-04/">c&#43;&#43;编写一个自己的EOS合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/golang_variable/">golang变量</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/question/">一些常见的问题</a></li>
+      	
+    </ul>
+</nav>
+
+    
+    <main class="content" role="main">
+    
+<article class="post">
+    <header>
+        <h1 class="post-title">Docker中phabricator搭建配置</h1>
+        <div class="post-meta">
+            <time datetime="05 April 2017">
+                05 April 2017
+            </time>
+        </div>
+    </header>
+
+    <section class="post-content">
+        
+
+<h2 id="搭建">搭建</h2>
+
+<ol>
+<li><p>文件准备</p>
+
+<ul>
+<li>phabricator <code>docker pull hachque/phabricator</code></li>
+<li>MySQL <code>docker pull MySQL</code></li>
+</ul></li>
+
+<li><p>MySQL 运行容器命令</p></li>
+</ol>
+
+<pre><code>docker run --name MySQL_PHA \
+     -p 3306:3306 \
+     -v /data/mysql:/var/lib/mysql \
+     -e MYSQL_ROOT_PASSWORD=123456 \
+     -d mysql
+</code></pre>
+
+<ol>
+<li>phabricator运行容器命令</li>
+</ol>
+
+<pre><code>docker run \
+    --name PHA \
+    -d -p 80:80 -p 465:465 -p 2222:2222 \
+    --env PHABRICATOR_HOST=192.168.1.191 \
+    --env MYSQL_HOST=172.17.0.1 \
+    --env MYSQL_USER=root \
+    --env MYSQL_PASS=123456 \
+    --env PHABRICATOR_REPOSITORY_PATH=/repos \
+    -v /data/repo:/repos \
+    hachque/phabricator
+</code></pre>
+
+<ul>
+<li>端口80 是web访问  465 是发邮件使用端口 2222是Git使用</li>
+<li>MYSQL_HOST是MySQL容器的内部地址</li>
+<li>具体查看可用 <code>docker inspect --format '{{ .NetworkSettings.IPAddress }}' MySQL_PHA</code> 查看</li>
+<li>打开192.168.1.191可以查看到页面</li>
+</ul>
+
+<h2 id="配置">配置</h2>
+
+<h3 id="配置账号密码登陆">配置账号密码登陆</h3>
+
+<ul>
+<li>在  <code>Auth &gt; Auth Providers</code> 目录下设置 添加<code>Username/Password</code></li>
+</ul>
+
+<h3 id="配置htttp">配置HTTTP</h3>
+
+<ol>
+<li><p>设置 <code>http权限</code></p>
+
+<ul>
+<li><code>./config set diffusion.allow-http-auth true</code></li>
+</ul></li>
+
+<li><p>进入<code>phabricator\bin</code>目录</p>
+
+<ul>
+<li><p>添加 <code>git-http-backend</code> phabricator的环境变量</p></li>
+
+<li><p><code>./config set environment.append-paths '[&quot;/bin&quot;,&quot;/usr/bin&quot;,&quot;/usr/local/bin&quot;,&quot;/usr/lib/git&quot;]'</code></p></li>
+</ul></li>
+</ol>
+
+<h3 id="配置邮件">配置邮件</h3>
+
+<ul>
+<li><p>在 <code>Config &gt; Core &gt; Mail</code> 目录下设置</p>
+
+<ul>
+<li><code>metamta.default-address</code> 设置为有效邮箱(同一域名)</li>
+<li><code>metamta.mail-adapter</code> 设置为 <code>PhabricatorMailImplementationPHPMailerAdapter</code></li>
+</ul></li>
+
+<li><p>在<code>Config &gt; Core &gt; PHPMailer</code>目录设置(以腾讯企业邮箱为例)</p>
+
+<ul>
+<li><code>phpmailer.mailer</code> 邮件协议(smtp)</li>
+<li><code>phpmailer.smtp-host</code> 发件箱域名(smtp.exmail.qq.com)</li>
+<li><code>phpmailer.smtp-port</code> 端口(465)</li>
+<li><code>phpmailer.smtp-protocol</code> 协议(ssl)</li>
+<li><code>phpmailer.smtp-user</code> 用户名(user@inc.com)</li>
+<li><code>phpmailer.smtp-password</code> 密码(1231123)</li>
+</ul></li>
+</ul>
+
+    </section>
+
+    
+    <section class="post-tags" style="padding-bottom:60px;">
+        <div class="post-meta tags">
+            <i class="fa fa-fw fa-tag"></i>
+            
+                
+                <a href="//vskity.cn/tags/phabricator">phabricator </a>
+            
+                
+                <a href="//vskity.cn/tags/docker">docker </a>
+            
+        </div>
+    </section>
+    
+    
+    <section class="share">
+    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head"> Back to top</a></p>
+    <p class="info prompt">Share</p>
+    <a href="http://twitter.com/share?text=Docker%e4%b8%adphabricator%e6%90%ad%e5%bb%ba%e9%85%8d%e7%bd%ae&url=%2f%2fvskity.cn%2fpost%2fphabricator%2f" title="Share on Twitter"
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <i class="fa fa-2x fa-fw fa-twitter-square"></i> <span class="hidden">Twitter</span>
+    </a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2f%2fvskity.cn%2fpost%2fphabricator%2f" title="Share on Facebook"
+        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i> <span class="hidden">Facebook</span>
+    </a>
+    <a href="https://plus.google.com/share?url=%2f%2fvskity.cn%2fpost%2fphabricator%2f" title="Share on Google+"
+       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <i class="fa fa-2x fa-fw fa-google-plus-square" style="margin-left: -8px"></i> <span class="hidden">Google+</span>
+    </a>
+</section>
+
+    <footer class="post-footer">
+        <section class="author">
+    <div class="authorimage" style="background: url(//vskity.cn/img/avatar.jpg)"></div>
+    <h4>vskity</h4>
+    <p class="bio">programmer - golang</p>
+    <p class="meta">
+      
+    </p>
+</section>
+    </footer>
+    
+</article>
+
+    </main>
+
+    <footer class="site-footer">
+	<div class="inner">
+		<section class="footer-social">
+      
+      
+      
+      
+      
+      
+      <a href="//github.com/vskity" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i> <span class="hidden">GitHub</span></a>&nbsp;
+      
+      
+      
+      
+  </section>
+
+		<section class="copyright">&copy; 2018 <a href="//vskity.cn/">vskity</a>. Released under the MIT license.</section>
+	</div>
+</footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//vskity.cn/js/index.js"></script>
+<script src="//vskity.cn/js/smooth-scroll.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+
+
+<script>
+    smoothScroll.init({
+        speed: 800,
+        easing: 'easeInOutCubic',
+        updateURL: false,
+        offset: 125,
+    });
+</script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-100632159-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</body>
+</html>

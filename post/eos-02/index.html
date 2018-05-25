@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>EOS搭建单节点测试网络 &middot; vskity</title>
+    <meta name="author" content="vskity">
+    <meta name="description" content="Every noble work is at first impossible.">
+    <meta name="generator" content="Hugo 0.40.3" />
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- RSS autodiscovery -->
+    
+
+    <link rel="shortcut icon" href="//vskity.cn/img/favicon.ico">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="//vskity.cn/css/screen.css">
+    <link rel="stylesheet" href="//vskity.cn/css/github.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+    
+
+    
+    <link rel="shortcut icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    
+
+    <!-- Stylesheet for theme color -->
+    <style type="text/css">
+    a, a:visited {color: #33cc99;}
+    .pagination a {color: #33cc99;}
+    .gist .gist-file .gist-meta a:visited {color: #33cc99 !important;}
+    a:focus, a:hover {color: #178b6b;}
+    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #178b6b;}
+    .older-posts:hover, .newer-posts:hover {color: #178b6b;}
+</style>
+</head>
+
+<body class="home-template">
+    <header id="site-head">
+	
+	<h1 class="blog-title"><a href="//vskity.cn/">vskity&rsquo;s blog</a></h1>
+	
+	
+</header>
+    
+<nav class="menu" role="nav">
+    <ul>
+        
+        	<li class="nav nav-current"><a href="//vskity.cn/about/">About me</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/phabricator/">Docker中phabricator搭建配置</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-01/">EOS介绍</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-02/">EOS搭建单节点测试网络</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-03/">EOS智能合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/nat/">NAT</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/benchmarkstring/">String连接性能测试</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-04/">c&#43;&#43;编写一个自己的EOS合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/golang_variable/">golang变量</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/question/">一些常见的问题</a></li>
+      	
+    </ul>
+</nav>
+
+    
+    <main class="content" role="main">
+    
+<article class="post">
+    <header>
+        <h1 class="post-title">EOS搭建单节点测试网络</h1>
+        <div class="post-meta">
+            <time datetime="03 May 2018">
+                03 May 2018
+            </time>
+        </div>
+    </header>
+
+    <section class="post-content">
+        
+
+<p>默认的配置文件位置在</p>
+
+<ul>
+<li>Ubuntu <code>~/.local/share/eosio/nodeos/config</code></li>
+<li>macOS <code>~/Library/Application Support/eosio/nodeos/config</code></li>
+</ul>
+
+<h3 id="启动nodeos">启动nodeos</h3>
+
+<pre><code>cd build/programs/nodeos
+
+./nodeos -e -p eosio --plugin eosio::wallet_api_plugin --plugin eosio::chain_api_plugin --plugin eosio::account_history_api_plugin 
+</code></pre>
+
+<p>出现 <code>generated block #2 @ 2017-09-04T04:26:18 with 0 trxs  0 pending</code> 表示已经启动，并正常出快</p>
+
+<p><img src="//vskity.cn/eos-run.png" alt="eos run" /></p>
+
+<p><img src="//vskity.cn/eos-run-genreate.png" alt="eos run genreate" /></p>
+
+<h3 id="通过cli来查看">通过cli来查看</h3>
+
+<p><code>$ ./cleos get info</code></p>
+
+<pre><code class="language-json">{
+  &quot;server_version&quot;: &quot;45fb9218&quot;,
+  &quot;head_block_num&quot;: 1317,
+  &quot;last_irreversible_block_num&quot;: 1316,
+  &quot;head_block_id&quot;: &quot;00000525480e657589815cbc2ecf78d55dd33aba3a782c3f4deae6a8a934f613&quot;,
+  &quot;head_block_time&quot;: &quot;2018-05-07T08:56:18&quot;,
+  &quot;head_block_producer&quot;: &quot;eosio&quot;
+}
+</code></pre>
+
+<p><code>$ ./cleos get block 00000525480e657589815cbc2ecf78d55dd33aba3a782c3f4deae6a8a934f613</code></p>
+
+<pre><code class="language-json">{
+  &quot;previous&quot;: &quot;000005248ca5f3839afb2dd8ca2830f4a7cd08580675980b256b9805c6ece99c&quot;,
+  &quot;timestamp&quot;: &quot;2018-05-07T08:56:18.500&quot;,
+  &quot;transaction_mroot&quot;: &quot;bdd887f563e9d0ac973ca861b302a3deb383d22ca451f7ef7642811983c5004c&quot;,
+  &quot;action_mroot&quot;: &quot;a183383165931ee7d399140c231ffb4b04edbb16630fed00989106c4bcf4c32b&quot;,
+  &quot;block_mroot&quot;: &quot;4b297f80126fd0925829ac320de500fb1cb61605214679ba0c20d9fb470512e0&quot;,
+  &quot;producer&quot;: &quot;eosio&quot;,
+  &quot;schedule_version&quot;: 0,
+  &quot;new_producers&quot;: null,
+  &quot;producer_signature&quot;: &quot;SIG_K1_Kiru1RH1m7bwB6tKoytpdnp657MdUNnZ1Ea1bfsSgnCvsRcHsmbXE2N9VPB3Gf25oPDtRp6WNj7YsJfw1N2g3aP6pStMAu&quot;,
+  &quot;regions&quot;: [{
+      &quot;region&quot;: 0,
+      &quot;cycles_summary&quot;: [[{
+            &quot;read_locks&quot;: [],
+            &quot;write_locks&quot;: [],
+            &quot;transactions&quot;: [{
+                &quot;status&quot;: &quot;executed&quot;,
+                &quot;kcpu_usage&quot;: 2,
+                &quot;net_usage_words&quot;: 38,
+                &quot;id&quot;: &quot;48c3c04ceaf920eb28300517c22c593317ca77789765b12f77806344d803ad0c&quot;
+              }
+            ]
+          }
+        ]
+      ]
+    }
+  ],
+  &quot;input_transactions&quot;: [],
+  &quot;id&quot;: &quot;00000525480e657589815cbc2ecf78d55dd33aba3a782c3f4deae6a8a934f613&quot;,
+  &quot;block_num&quot;: 1317,
+  &quot;ref_block_prefix&quot;: 3160179081
+}
+
+</code></pre>
+
+<h3 id="通过rpc来查看">通过rpc来查看</h3>
+
+<ul>
+<li>curl <a href="http://127.0.0.1:8888/v1/chain/get_info">http://127.0.0.1:8888/v1/chain/get_info</a></li>
+<li>curl <a href="http://localhost:8888/v1/chain/get_block">http://localhost:8888/v1/chain/get_block</a> -X POST -d <br />
+<code>'{&quot;block_num_or_id&quot;:5}'</code></li>
+<li>curl <a href="http://localhost:8888/v1/chain/get_block">http://localhost:8888/v1/chain/get_block</a> -X POST -d <br />
+<code>'{&quot;block_num_or_id&quot;:0000000445a9f27898383fd7de32835d5d6a978cc14ce40d9f327b5329de796b}'</code></li>
+</ul>
+
+    </section>
+
+    
+    <section class="post-tags" style="padding-bottom:60px;">
+        <div class="post-meta tags">
+            <i class="fa fa-fw fa-tag"></i>
+            
+                
+                <a href="//vskity.cn/tags/eos">EOS </a>
+            
+                
+                <a href="//vskity.cn/tags/eos%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C">EOS测试网络 </a>
+            
+                
+                <a href="//vskity.cn/tags/blockchain">Blockchain </a>
+            
+                
+                <a href="//vskity.cn/tags/%E5%8C%BA%E5%9D%97%E9%93%BE">区块链 </a>
+            
+        </div>
+    </section>
+    
+    
+    <section class="share">
+    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head"> Back to top</a></p>
+    <p class="info prompt">Share</p>
+    <a href="http://twitter.com/share?text=EOS%e6%90%ad%e5%bb%ba%e5%8d%95%e8%8a%82%e7%82%b9%e6%b5%8b%e8%af%95%e7%bd%91%e7%bb%9c&url=%2f%2fvskity.cn%2fpost%2feos-02%2f" title="Share on Twitter"
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <i class="fa fa-2x fa-fw fa-twitter-square"></i> <span class="hidden">Twitter</span>
+    </a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2f%2fvskity.cn%2fpost%2feos-02%2f" title="Share on Facebook"
+        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i> <span class="hidden">Facebook</span>
+    </a>
+    <a href="https://plus.google.com/share?url=%2f%2fvskity.cn%2fpost%2feos-02%2f" title="Share on Google+"
+       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <i class="fa fa-2x fa-fw fa-google-plus-square" style="margin-left: -8px"></i> <span class="hidden">Google+</span>
+    </a>
+</section>
+
+    <footer class="post-footer">
+        <section class="author">
+    <div class="authorimage" style="background: url(//vskity.cn/img/avatar.jpg)"></div>
+    <h4>vskity</h4>
+    <p class="bio">programmer - golang</p>
+    <p class="meta">
+      
+    </p>
+</section>
+    </footer>
+    
+</article>
+
+    </main>
+
+    <footer class="site-footer">
+	<div class="inner">
+		<section class="footer-social">
+      
+      
+      
+      
+      
+      
+      <a href="//github.com/vskity" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i> <span class="hidden">GitHub</span></a>&nbsp;
+      
+      
+      
+      
+  </section>
+
+		<section class="copyright">&copy; 2018 <a href="//vskity.cn/">vskity</a>. Released under the MIT license.</section>
+	</div>
+</footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//vskity.cn/js/index.js"></script>
+<script src="//vskity.cn/js/smooth-scroll.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+
+
+<script>
+    smoothScroll.init({
+        speed: 800,
+        easing: 'easeInOutCubic',
+        updateURL: false,
+        offset: 125,
+    });
+</script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-100632159-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</body>
+</html>

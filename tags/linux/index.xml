@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on vskity</title>
+    <link>//vskity.cn/tags/linux/</link>
+    <description>Recent content in Linux on vskity</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>All rights reserved  2016-2018</copyright>
+    <lastBuildDate>Thu, 30 Nov 2017 15:12:17 +0800</lastBuildDate>
+    
+	<atom:link href="//vskity.cn/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>一些常见的问题</title>
+      <link>//vskity.cn/post/question/</link>
+      <pubDate>Thu, 30 Nov 2017 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/question/</guid>
+      <description>面试题 一些常见的问题  智能指针的原理，常用的智能指针
+原文在这里C++11中智能指针的原理、使用、实现
+C++程序设计中使用堆内存是非常频繁的操作，堆内存的申请和释放都由程序员自己管理。程序员自己管理堆内存可以提高了程序的效率，但是整体来说堆内存的管理是麻烦的，C++11中引入了智能指针的概念，方便管理堆内存。使用普通指针，容易造成堆内存泄露（忘记释放），二次释放，程序发生异常时内存泄露等问题等，使用智能指针能更好的管理堆内存。
+理解智能指针需要从下面三个层次：
+ 从较浅的层面看，智能指针是利用了一种叫做RAII（资源获取即初始化）的技术对普通的指针进行封装，这使得智能指针实质是一个对象，行为表现的却像一个指针。 智能指针的作用是防止忘记调用delete释放内存和程序异常的进入catch块忘记释放内存。另外指针的释放时机也是非常有考究的，多次释放同一个指针会造成程序崩溃，这些都可以通过智能指针来解决。 智能指针还有一个作用是把值语义转换成引用语义。C++和Java有一处最大的区别在于语义不同，在Java里面下列代码：
+Animal a = new Animal(); Animal b = a;  你当然知道，这里其实只生成了一个对象，a和b仅仅是把持对象的引用而已。 但在C++中不是这样，
+Animal a; Animal b = a;  这里却是就是生成了两个对象。
+  C++的4种类型转换方式
+ static_cast
+最常用的类型转换符，在正常状况下的类型转换，如把int转换为float，如：int i；float f； f=（float）i；或者f=static_cast&amp;lt;float&amp;gt;(i);
+ const_cast
+用于取出const属性，把const类型的指针变为非const类型的指针，如：const int *fun(int x,int y){} int *ptr=const_cast&amp;lt;int *&amp;gt;(fun(2.3))
+ dynamic_cast
+该操作符用于运行时检查该转换是否类型安全，但只在多态类型时合法，即该类至少具有一个虚拟方法。dynamic_cast与static_cast具有相同的基本语法，dynamic_cast主要用于类层次间的上行转换和下行转换，还可以用于类之间的交叉转换。在类层次间进行上行转换时，dynamic_cast和static_cast的效果是一样的；在进行下行转换时，dynamic_cast具有类型检查的功能，比static_cast更安全。如：
+class C { //…C没有虚拟函数 }； class T{ //… } int main() { dynamic_cast&amp;lt;T*&amp;gt; (new C);//错误 } 此时如改为以下则是合法的： class C { public: virtual void m() {};// C现在是 多态 }  reinterpret_cast</description>
+    </item>
+    
+  </channel>
+</rss>

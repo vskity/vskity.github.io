@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Phabricator on vskity</title>
+    <link>//vskity.cn/tags/phabricator/</link>
+    <description>Recent content in Phabricator on vskity</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>All rights reserved  2016-2018</copyright>
+    <lastBuildDate>Wed, 05 Apr 2017 00:39:56 +0800</lastBuildDate>
+    
+	<atom:link href="//vskity.cn/tags/phabricator/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Docker中phabricator搭建配置</title>
+      <link>//vskity.cn/post/phabricator/</link>
+      <pubDate>Wed, 05 Apr 2017 00:39:56 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/phabricator/</guid>
+      <description>搭建  文件准备
+ phabricator docker pull hachque/phabricator MySQL docker pull MySQL  MySQL 运行容器命令
+  docker run --name MySQL_PHA \ -p 3306:3306 \ -v /data/mysql:/var/lib/mysql \ -e MYSQL_ROOT_PASSWORD=123456 \ -d mysql   phabricator运行容器命令  docker run \ --name PHA \ -d -p 80:80 -p 465:465 -p 2222:2222 \ --env PHABRICATOR_HOST=192.168.1.191 \ --env MYSQL_HOST=172.17.0.1 \ --env MYSQL_USER=root \ --env MYSQL_PASS=123456 \ --env PHABRICATOR_REPOSITORY_PATH=/repos \ -v /data/repo:/repos \ hachque/phabricator   端口80 是web访问 465 是发邮件使用端口 2222是Git使用 MYSQL_HOST是MySQL容器的内部地址 具体查看可用 docker inspect --format &#39;{{ .</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on vskity</title>
+    <link>//vskity.cn/tags/</link>
+    <description>Recent content in Tags on vskity</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>All rights reserved  2016-2018</copyright>
+    <lastBuildDate>Sun, 03 Sep 2017 12:57:15 +0800</lastBuildDate>
+    
+	<atom:link href="//vskity.cn/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Benchmark</title>
+      <link>//vskity.cn/tags/benchmark/</link>
+      <pubDate>Sun, 03 Sep 2017 12:57:15 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/benchmark/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Blockchain</title>
+      <link>//vskity.cn/tags/blockchain/</link>
+      <pubDate>Thu, 10 May 2018 14:53:45 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/blockchain/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;</title>
+      <link>//vskity.cn/tags/c&#43;&#43;/</link>
+      <pubDate>Thu, 10 May 2018 14:53:45 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/c&#43;&#43;/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Docker</title>
+      <link>//vskity.cn/tags/docker/</link>
+      <pubDate>Wed, 05 Apr 2017 00:39:56 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Eos</title>
+      <link>//vskity.cn/tags/eos/</link>
+      <pubDate>Thu, 10 May 2018 14:53:45 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/eos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Eos测试网络</title>
+      <link>//vskity.cn/tags/eos%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C/</link>
+      <pubDate>Tue, 08 May 2018 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/eos%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Golang</title>
+      <link>//vskity.cn/tags/golang/</link>
+      <pubDate>Sun, 03 Sep 2017 12:57:15 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Linux</title>
+      <link>//vskity.cn/tags/linux/</link>
+      <pubDate>Thu, 30 Nov 2017 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Nat</title>
+      <link>//vskity.cn/tags/nat/</link>
+      <pubDate>Tue, 04 Apr 2017 21:46:04 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/nat/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Phabricator</title>
+      <link>//vskity.cn/tags/phabricator/</link>
+      <pubDate>Wed, 05 Apr 2017 00:39:56 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/phabricator/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>String</title>
+      <link>//vskity.cn/tags/string/</link>
+      <pubDate>Sun, 03 Sep 2017 12:57:15 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/string/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Variable</title>
+      <link>//vskity.cn/tags/variable/</link>
+      <pubDate>Mon, 19 Jun 2017 14:10:33 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/variable/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>区块链</title>
+      <link>//vskity.cn/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/</link>
+      <pubDate>Tue, 08 May 2018 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>智能合约</title>
+      <link>//vskity.cn/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/</link>
+      <pubDate>Thu, 10 May 2018 14:53:45 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>测试</title>
+      <link>//vskity.cn/tags/%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sun, 03 Sep 2017 12:57:15 +0800</pubDate>
+      
+      <guid>//vskity.cn/tags/%E6%B5%8B%E8%AF%95/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

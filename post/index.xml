@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on vskity</title>
+    <link>//vskity.cn/post/</link>
+    <description>Recent content in Posts on vskity</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <copyright>All rights reserved  2016-2018</copyright>
+    <lastBuildDate>Thu, 10 May 2018 14:53:45 +0800</lastBuildDate>
+    
+	<atom:link href="//vskity.cn/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>c&#43;&#43;编写一个自己的EOS合约</title>
+      <link>//vskity.cn/post/eos-04/</link>
+      <pubDate>Thu, 10 May 2018 14:53:45 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/eos-04/</guid>
+      <description>启动单链  直接启动nodeos这一部分已经讲述，这里不再重复。
+ 新建hello文件夹 mkdir hello 新建文件hello.cpp touch hello.cpp 编写合约代码,代码如下：  #include &amp;lt;eosiolib/eosio.hpp&amp;gt; #include &amp;lt;eosiolib/print.hpp&amp;gt; using namespace eosio; class hello : public eosio::contract { public: using contract::contract; /// @abi action void hi( account_name user ) { print( &amp;quot;Hello, &amp;quot;, name{user} ); } }; EOSIO_ABI( hello, (hi) )   编译合约文件，编译成web assembly文件   eosiocpp -o hello.wast hello.cpp
+编译会有很多提示后者警告，先不用管
+ 生成abi文件  eosiocpp -g hello.abi hello.cpp
+ 上传合约代码 $ cleos set contract tom .</description>
+    </item>
+    
+    <item>
+      <title>EOS智能合约</title>
+      <link>//vskity.cn/post/eos-03/</link>
+      <pubDate>Tue, 08 May 2018 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/eos-03/</guid>
+      <description>以发Token为例，对EOS的一些操作
+ 创建钱包  参数-n 指定钱包的名称,默认是default 默认钱包地址 ~/.local/share/eosio/nodeos/data/default.wallet
+$ cleos wallet create -n test Creating wallet: test Save password to use in the future to unlock this wallet. Without password imported keys will not be retrievable. &amp;quot;PW5JVWEDqSv88YvPNkb3CNFkFARQisPw1uRBrySM7tgJYZB3EVTxS&amp;quot;   查看钱包   列出所有的钱包名 如果钱包是解锁状态 后面会有一个 * 号， 否则就是锁定状态
+$ cleos wallet list Wallets: [ &amp;quot;test&amp;quot; ] $ cleos wallet list Wallets: [ &amp;quot;test *&amp;quot; ]   钱包解锁  参数-n指定钱包名，默认default 输入钱包密码即可解锁(密码是创建钱包时提示的)</description>
+    </item>
+    
+    <item>
+      <title>EOS搭建单节点测试网络</title>
+      <link>//vskity.cn/post/eos-02/</link>
+      <pubDate>Thu, 03 May 2018 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/eos-02/</guid>
+      <description>默认的配置文件位置在
+ Ubuntu ~/.local/share/eosio/nodeos/config macOS ~/Library/Application Support/eosio/nodeos/config  启动nodeos cd build/programs/nodeos ./nodeos -e -p eosio --plugin eosio::wallet_api_plugin --plugin eosio::chain_api_plugin --plugin eosio::account_history_api_plugin  出现 generated block #2 @ 2017-09-04T04:26:18 with 0 trxs 0 pending 表示已经启动，并正常出快
+通过cli来查看 $ ./cleos get info
+{ &amp;quot;server_version&amp;quot;: &amp;quot;45fb9218&amp;quot;, &amp;quot;head_block_num&amp;quot;: 1317, &amp;quot;last_irreversible_block_num&amp;quot;: 1316, &amp;quot;head_block_id&amp;quot;: &amp;quot;00000525480e657589815cbc2ecf78d55dd33aba3a782c3f4deae6a8a934f613&amp;quot;, &amp;quot;head_block_time&amp;quot;: &amp;quot;2018-05-07T08:56:18&amp;quot;, &amp;quot;head_block_producer&amp;quot;: &amp;quot;eosio&amp;quot; }  $ ./cleos get block 00000525480e657589815cbc2ecf78d55dd33aba3a782c3f4deae6a8a934f613
+{ &amp;quot;previous&amp;quot;: &amp;quot;000005248ca5f3839afb2dd8ca2830f4a7cd08580675980b256b9805c6ece99c&amp;quot;, &amp;quot;timestamp&amp;quot;: &amp;quot;2018-05-07T08:56:18.500&amp;quot;, &amp;quot;transaction_mroot&amp;quot;: &amp;quot;bdd887f563e9d0ac973ca861b302a3deb383d22ca451f7ef7642811983c5004c&amp;quot;, &amp;quot;action_mroot&amp;quot;: &amp;quot;a183383165931ee7d399140c231ffb4b04edbb16630fed00989106c4bcf4c32b&amp;quot;, &amp;quot;block_mroot&amp;quot;: &amp;quot;4b297f80126fd0925829ac320de500fb1cb61605214679ba0c20d9fb470512e0&amp;quot;, &amp;quot;producer&amp;quot;: &amp;quot;eosio&amp;quot;, &amp;quot;schedule_version&amp;quot;: 0, &amp;quot;new_producers&amp;quot;: null, &amp;quot;producer_signature&amp;quot;: &amp;quot;SIG_K1_Kiru1RH1m7bwB6tKoytpdnp657MdUNnZ1Ea1bfsSgnCvsRcHsmbXE2N9VPB3Gf25oPDtRp6WNj7YsJfw1N2g3aP6pStMAu&amp;quot;, &amp;quot;regions&amp;quot;: [{ &amp;quot;region&amp;quot;: 0, &amp;quot;cycles_summary&amp;quot;: [[{ &amp;quot;read_locks&amp;quot;: [], &amp;quot;write_locks&amp;quot;: [], &amp;quot;transactions&amp;quot;: [{ &amp;quot;status&amp;quot;: &amp;quot;executed&amp;quot;, &amp;quot;kcpu_usage&amp;quot;: 2, &amp;quot;net_usage_words&amp;quot;: 38, &amp;quot;id&amp;quot;: &amp;quot;48c3c04ceaf920eb28300517c22c593317ca77789765b12f77806344d803ad0c&amp;quot; } ] } ] ] } ], &amp;quot;input_transactions&amp;quot;: [], &amp;quot;id&amp;quot;: &amp;quot;00000525480e657589815cbc2ecf78d55dd33aba3a782c3f4deae6a8a934f613&amp;quot;, &amp;quot;block_num&amp;quot;: 1317, &amp;quot;ref_block_prefix&amp;quot;: 3160179081 }  通过rpc来查看  curl http://127.</description>
+    </item>
+    
+    <item>
+      <title>EOS介绍</title>
+      <link>//vskity.cn/post/eos-01/</link>
+      <pubDate>Tue, 01 May 2018 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/eos-01/</guid>
+      <description>EOS 详细的介绍在这里 EOS-Wiki
+环境准备  EOS是基于C++14进行开发，使用CMake进行编译管理 使用 clang 4.0.0 和 CMake 3.8.0 进行开发编译 EOS 使用 WebAssembly 编译和运行智能合约，因此需要使用 WASM 编译器 EOS依赖：  Boost 1.64 OpenSSL LLVM 4.0 secp256k1-zkp   源码获取 git clone https://github.com/EOSIO/eos --recursive
+ 如果clone时没有使用 --recursive 参数，用git submodule update --init --recursive 下载子模块
+ 编译 系统要求  8G 内存 20G 硬盘  依赖安装 EOS提供了安装依赖脚本在eos/scripts/eosio_build_*.sh 包括了amazon、ubuntu、centos、darwin、dep、fedorad等 - Amazon 2017.09 and higher. - Centos 7. - Fedora 25 and higher (Fedora 27 recommended).</description>
+    </item>
+    
+    <item>
+      <title>一些常见的问题</title>
+      <link>//vskity.cn/post/question/</link>
+      <pubDate>Thu, 30 Nov 2017 15:12:17 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/question/</guid>
+      <description>面试题 一些常见的问题  智能指针的原理，常用的智能指针
+原文在这里C++11中智能指针的原理、使用、实现
+C++程序设计中使用堆内存是非常频繁的操作，堆内存的申请和释放都由程序员自己管理。程序员自己管理堆内存可以提高了程序的效率，但是整体来说堆内存的管理是麻烦的，C++11中引入了智能指针的概念，方便管理堆内存。使用普通指针，容易造成堆内存泄露（忘记释放），二次释放，程序发生异常时内存泄露等问题等，使用智能指针能更好的管理堆内存。
+理解智能指针需要从下面三个层次：
+ 从较浅的层面看，智能指针是利用了一种叫做RAII（资源获取即初始化）的技术对普通的指针进行封装，这使得智能指针实质是一个对象，行为表现的却像一个指针。 智能指针的作用是防止忘记调用delete释放内存和程序异常的进入catch块忘记释放内存。另外指针的释放时机也是非常有考究的，多次释放同一个指针会造成程序崩溃，这些都可以通过智能指针来解决。 智能指针还有一个作用是把值语义转换成引用语义。C++和Java有一处最大的区别在于语义不同，在Java里面下列代码：
+Animal a = new Animal(); Animal b = a;  你当然知道，这里其实只生成了一个对象，a和b仅仅是把持对象的引用而已。 但在C++中不是这样，
+Animal a; Animal b = a;  这里却是就是生成了两个对象。
+  C++的4种类型转换方式
+ static_cast
+最常用的类型转换符，在正常状况下的类型转换，如把int转换为float，如：int i；float f； f=（float）i；或者f=static_cast&amp;lt;float&amp;gt;(i);
+ const_cast
+用于取出const属性，把const类型的指针变为非const类型的指针，如：const int *fun(int x,int y){} int *ptr=const_cast&amp;lt;int *&amp;gt;(fun(2.3))
+ dynamic_cast
+该操作符用于运行时检查该转换是否类型安全，但只在多态类型时合法，即该类至少具有一个虚拟方法。dynamic_cast与static_cast具有相同的基本语法，dynamic_cast主要用于类层次间的上行转换和下行转换，还可以用于类之间的交叉转换。在类层次间进行上行转换时，dynamic_cast和static_cast的效果是一样的；在进行下行转换时，dynamic_cast具有类型检查的功能，比static_cast更安全。如：
+class C { //…C没有虚拟函数 }； class T{ //… } int main() { dynamic_cast&amp;lt;T*&amp;gt; (new C);//错误 } 此时如改为以下则是合法的： class C { public: virtual void m() {};// C现在是 多态 }  reinterpret_cast</description>
+    </item>
+    
+    <item>
+      <title>String连接性能测试</title>
+      <link>//vskity.cn/post/benchmarkstring/</link>
+      <pubDate>Sun, 03 Sep 2017 12:57:15 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/benchmarkstring/</guid>
+      <description>Golang String类型 连接性能测试 BenchmarkTest strings.Join() 代码如下：
+func BenchmarkString(b *testing.B) { str := strings.Repeat(&amp;quot;r&amp;quot;, n) // n=[20,400,8000] var dst string for i := 0; i &amp;lt; b.N; i++ { dst = strings.Join([]string{dst}, str) } }   第一组 每次连接长度为20
+goos: windows goarch: amd64 pkg: github.com/vskity/test BenchmarkString-4 300000000 5.24 ns/op 0 B/op 0 allocs/op BenchmarkString-4 300000000 5.20 ns/op 0 B/op 0 allocs/op BenchmarkString-4 300000000 5.28 ns/op 0 B/op 0 allocs/op BenchmarkString-4 300000000 5.</description>
+    </item>
+    
+    <item>
+      <title>golang变量</title>
+      <link>//vskity.cn/post/golang_variable/</link>
+      <pubDate>Mon, 19 Jun 2017 14:10:33 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/golang_variable/</guid>
+      <description>Golang变量 变量基础类型    类型 大小     bool 1   byte 1   uint8 1   int8 1   int16 2   uint16 2   rune 4   int32 4   uint32 4   float32 4   int64 8   uint64 8   float64 8   complex64 8   string 16   complex128 16    特殊变量    类型 大小     struct{} 0   int 8   uint 8   map[&amp;hellip;]&amp;hellip; 8   func() 8   interface{} 16   [&amp;hellip;]slice 24     int uint 不同平台可能不一致  具体代码如下</description>
+    </item>
+    
+    <item>
+      <title>Docker中phabricator搭建配置</title>
+      <link>//vskity.cn/post/phabricator/</link>
+      <pubDate>Wed, 05 Apr 2017 00:39:56 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/phabricator/</guid>
+      <description>搭建  文件准备
+ phabricator docker pull hachque/phabricator MySQL docker pull MySQL  MySQL 运行容器命令
+  docker run --name MySQL_PHA \ -p 3306:3306 \ -v /data/mysql:/var/lib/mysql \ -e MYSQL_ROOT_PASSWORD=123456 \ -d mysql   phabricator运行容器命令  docker run \ --name PHA \ -d -p 80:80 -p 465:465 -p 2222:2222 \ --env PHABRICATOR_HOST=192.168.1.191 \ --env MYSQL_HOST=172.17.0.1 \ --env MYSQL_USER=root \ --env MYSQL_PASS=123456 \ --env PHABRICATOR_REPOSITORY_PATH=/repos \ -v /data/repo:/repos \ hachque/phabricator   端口80 是web访问 465 是发邮件使用端口 2222是Git使用 MYSQL_HOST是MySQL容器的内部地址 具体查看可用 docker inspect --format &#39;{{ .</description>
+    </item>
+    
+    <item>
+      <title>NAT</title>
+      <link>//vskity.cn/post/nat/</link>
+      <pubDate>Tue, 04 Apr 2017 21:46:04 +0800</pubDate>
+      
+      <guid>//vskity.cn/post/nat/</guid>
+      <description>NAT分类 详情看这里 NAT专题  静态NAT(需要大量公网IP)
+ 动态NAT
+ NAPT (我们目前使用最多)
+  P2P NAT实现关键点  获取本机在公网地址 IP+Port 获取目标地址(公网) IP+Port 端口绑定 (否则数据包会被丢弃) 实现穿透  NAPT实现 P2P中的NAT打洞方案详解
+ STUN
+它允许位于NAT（或多重NAT）后的客户端找出自己的公网地址， 查出自己位于哪种类型的NAT之后以及NAT为某一个本地端口所绑定的Internet端端口。 这些信息被用来在两个同时处于NAT路由器之后的主机之间建立UDP通信
+ TURN 中继NAT实现的穿透（中介转发，不是P2P）
+所有的数据交换都经由服务器来完成，这样NAT将没有障碍，但服务器的负载、丢包、延迟性就是很大的问题。 目前很多游戏均采用该方式避开NAT的问题
+详细看这里 STUN和TURN技术浅析
+ ALGs NAT ALG原理与应用
+它可以是一个设备或插件，用于支持SIP协议，主要类似与在网关上专门开辟一个通道，用于建立内网与外网的连接， 也就是说，这是一种定制的网关。更多只适用于使用他们的应用群体内部之间。
+ UpnP 浅析UPnP协议
+它是让网关设备在进行工作时寻找一个全球共享的可路由IP来作为通道，这样避免端口造成的影响。 要求设备支持且开启upnp功能，但大部分时候，这些功能处于安全考虑，是被关闭的。
+ ICE 交互式建立连接 ICE原理介绍
+一种综合性的NAT穿越的技术，可整合各种NAT穿透技术，如STUN、TURN（Traversal Using Relay NAT，中继NAT实现的穿透）等
+  Golang package  upnp  https://github.com/prestonTao/upnp https://github.com/huin/goupnp（以太坊使用）  STUN  https://github.com/pixelbender/go-stun  ICE  https://github.</description>
+    </item>
+    
+  </channel>
+</rss>

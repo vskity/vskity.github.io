@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>String连接性能测试 &middot; vskity</title>
+    <meta name="author" content="vskity">
+    <meta name="description" content="Every noble work is at first impossible.">
+    <meta name="generator" content="Hugo 0.40.3" />
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- RSS autodiscovery -->
+    
+
+    <link rel="shortcut icon" href="//vskity.cn/img/favicon.ico">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="//vskity.cn/css/screen.css">
+    <link rel="stylesheet" href="//vskity.cn/css/github.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+    
+
+    
+    <link rel="shortcut icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    
+
+    <!-- Stylesheet for theme color -->
+    <style type="text/css">
+    a, a:visited {color: #33cc99;}
+    .pagination a {color: #33cc99;}
+    .gist .gist-file .gist-meta a:visited {color: #33cc99 !important;}
+    a:focus, a:hover {color: #178b6b;}
+    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #178b6b;}
+    .older-posts:hover, .newer-posts:hover {color: #178b6b;}
+</style>
+</head>
+
+<body class="home-template">
+    <header id="site-head">
+	
+	<h1 class="blog-title"><a href="//vskity.cn/">vskity&rsquo;s blog</a></h1>
+	
+	
+</header>
+    
+<nav class="menu" role="nav">
+    <ul>
+        
+        	<li class="nav nav-current"><a href="//vskity.cn/about/">About me</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/phabricator/">Docker中phabricator搭建配置</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-01/">EOS介绍</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-02/">EOS搭建单节点测试网络</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-03/">EOS智能合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/nat/">NAT</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/benchmarkstring/">String连接性能测试</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-04/">c&#43;&#43;编写一个自己的EOS合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/golang_variable/">golang变量</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/question/">一些常见的问题</a></li>
+      	
+    </ul>
+</nav>
+
+    
+    <main class="content" role="main">
+    
+<article class="post">
+    <header>
+        <h1 class="post-title">String连接性能测试</h1>
+        <div class="post-meta">
+            <time datetime="03 September 2017">
+                03 September 2017
+            </time>
+        </div>
+    </header>
+
+    <section class="post-content">
+        
+
+<h2 id="golang-string类型-连接性能测试-benchmarktest">Golang String类型 连接性能测试 BenchmarkTest</h2>
+
+<h3 id="strings-join"><strong>strings.Join()</strong></h3>
+
+<p>代码如下：</p>
+
+<pre><code>func BenchmarkString(b *testing.B) {
+	str := strings.Repeat(&quot;r&quot;, n) // n=[20,400,8000]
+	var dst string
+	for i := 0; i &lt; b.N; i++ {
+		dst = strings.Join([]string{dst}, str)
+	}
+}
+
+</code></pre>
+
+<ul>
+<li><p>第一组 每次连接长度为20</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4         300000000                5.24 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.20 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.28 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.22 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.22 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.29 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.25 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.22 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.23 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.20 ns/op            0 B/op          0 allocs/op
+PASS
+ok      github.com/vskity/test  21.135s
+</code></pre></li>
+
+<li><p>第二组 每次连接的长度为400</p></li>
+</ul>
+
+<pre><code>   goos: windows
+   goarch: amd64
+   pkg: github.com/vskity/test
+   BenchmarkString-4         300000000                5.28 ns/op            0 B/op          0 allocs/op
+   BenchmarkString-4         300000000                5.24 ns/op            0 B/op          0 allocs/op
+   BenchmarkString-4         300000000                5.20 ns/op            0 B/op          0 allocs/op
+   BenchmarkString-4         300000000                5.42 ns/op            0 B/op          0 allocs/op
+   BenchmarkString-4         300000000                6.22 ns/op            0 B/op          0 allocs/op
+   BenchmarkString-4         300000000                5.30 ns/op            0 B/op          0 allocs/op
+   BenchmarkString-4         300000000                5.37 ns/op            0 B/op          0 allocs/op
+   BenchmarkString-4         300000000                5.29 ns/op            0 B/op          0 allocs/op
+   BenchmarkString-4         300000000                5.23 ns/op            0 B/op          0 allocs/op
+   BenchmarkString-4         300000000                5.26 ns/op            0 B/op          0 allocs/op
+   PASS
+   ok      github.com/vskity/test  21.570s
+</code></pre>
+
+<ul>
+<li><p>第三组 每次连接的长度为8000</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4         300000000                5.26 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.52 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.24 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.28 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.24 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.27 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.24 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.24 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.23 ns/op            0 B/op          0 allocs/op
+BenchmarkString-4         300000000                5.21 ns/op            0 B/op          0 allocs/op
+PASS
+ok      github.com/vskity/test  21.182s
+
+</code></pre></li>
+</ul>
+
+<h3 id="加号操作"><strong>加号操作(+)</strong></h3>
+
+<p>代码:</p>
+
+<pre><code>func BenchmarkString(b *testing.B) {
+	str := strings.Repeat(&quot;r&quot;, 20) // n=[20,400,8000]
+	var dst string
+	for i := 0; i &lt; b.N; i++ {
+		dst += str
+	}
+}
+
+</code></pre>
+
+<ul>
+<li><p>第一组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4           100000            151913 ns/op         1004055 B/op          1 allocs/op
+BenchmarkString-4           100000            152321 ns/op         1004054 B/op          1 allocs/op
+BenchmarkString-4           100000            153932 ns/op         1004054 B/op          1 allocs/op
+BenchmarkString-4           100000            152413 ns/op         1004054 B/op          1 allocs/op
+BenchmarkString-4           100000            154092 ns/op         1004054 B/op          1 allocs/op
+BenchmarkString-4           100000            153906 ns/op         1004054 B/op          1 allocs/op
+BenchmarkString-4           100000            150911 ns/op         1004054 B/op          1 allocs/op
+BenchmarkString-4           100000            151595 ns/op         1004055 B/op          1 allocs/op
+BenchmarkString-4           100000            151723 ns/op         1004055 B/op          1 allocs/op
+BenchmarkString-4           100000            152140 ns/op         1004054 B/op          1 allocs/op
+PASS
+ok      github.com/vskity/test  154.117s
+</code></pre></li>
+
+<li><p>第二组</p>
+
+<pre><code> goos: windows
+ goarch: amd64
+ pkg: github.com/vskity/test
+ BenchmarkString-4            10000            340808 ns/op         2004267 B/op          1 allocs/op
+ BenchmarkString-4            10000            343523 ns/op         2004267 B/op          1 allocs/op
+ BenchmarkString-4            10000            336500 ns/op         2004267 B/op          1 allocs/op
+ BenchmarkString-4            10000            342100 ns/op         2004267 B/op          1 allocs/op
+ BenchmarkString-4            10000            338100 ns/op         2004267 B/op          1 allocs/op
+ BenchmarkString-4            10000            334807 ns/op         2004267 B/op          1 allocs/op
+ BenchmarkString-4            10000            335510 ns/op         2004266 B/op          1 allocs/op
+ BenchmarkString-4            10000            335708 ns/op         2004266 B/op          1 allocs/op
+ BenchmarkString-4            10000            335407 ns/op         2004267 B/op          1 allocs/op
+ BenchmarkString-4            10000            335207 ns/op         2004266 B/op          1 allocs/op
+ PASS
+ ok      github.com/vskity/test  33.830s
+   
+</code></pre></li>
+
+<li><p>第三组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4            10000           6252032 ns/op        40008070 B/op          1 allocs/op
+BenchmarkString-4            10000           6305302 ns/op        40008070 B/op          1 allocs/op
+BenchmarkString-4            10000           6328903 ns/op        40008071 B/op          1 allocs/op
+BenchmarkString-4            10000           6316331 ns/op        40008070 B/op          1 allocs/op
+BenchmarkString-4            10000           6305402 ns/op        40008070 B/op          1 allocs/op
+BenchmarkString-4            10000           6297486 ns/op        40008070 B/op          1 allocs/op
+BenchmarkString-4            10000           6329407 ns/op        40008070 B/op          1 allocs/op
+BenchmarkString-4            10000           6307215 ns/op        40008070 B/op          1 allocs/op
+BenchmarkString-4            10000           6340309 ns/op        40008070 B/op          1 allocs/op
+BenchmarkString-4         *** Test killed: ran too long (10m0s).
+FAIL    github.com/vskity/test  600.114s
+</code></pre></li>
+</ul>
+
+<h3 id="append"><strong>append()</strong></h3>
+
+<p>代码:</p>
+
+<pre><code>func BenchmarkString(b *testing.B) {
+	str := strings.Repeat(&quot;r&quot;, 8000) // n=[20,400,8000]
+	var dst []byte
+	for i := 0; i &lt; b.N; i++ {
+		dst = append([]byte(dst), str...)
+	}
+}
+</code></pre>
+
+<ul>
+<li><p>第一组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4         50000000                43.7 ns/op           123 B/op          0 allocs/op
+BenchmarkString-4         50000000                32.2 ns/op           123 B/op          0 allocs/op
+BenchmarkString-4         50000000                30.4 ns/op           123 B/op          0 allocs/op
+BenchmarkString-4         50000000                33.1 ns/op           123 B/op          0 allocs/op
+BenchmarkString-4         50000000                32.0 ns/op           123 B/op          0 allocs/op
+BenchmarkString-4         50000000                30.1 ns/op           123 B/op          0 allocs/op
+BenchmarkString-4         50000000                28.8 ns/op           123 B/op          0 allocs/op
+BenchmarkString-4         100000000               36.7 ns/op           120 B/op          0 allocs/op
+BenchmarkString-4         50000000                33.2 ns/op           123 B/op          0 allocs/op
+BenchmarkString-4         50000000                30.6 ns/op           123 B/op          0 allocs/op
+PASS
+ok      github.com/vskity/test  19.062s
+
+</code></pre></li>
+
+<li><p>第二组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4          3000000               536 ns/op            2056 B/op          0 allocs/op
+BenchmarkString-4          5000000              2066 ns/op            2409 B/op          0 allocs/op
+BenchmarkString-4          3000000              1039 ns/op            2056 B/op          0 allocs/op
+BenchmarkString-4          5000000              1044 ns/op            2409 B/op          0 allocs/op
+BenchmarkString-4          3000000               466 ns/op            2056 B/op          0 allocs/op
+BenchmarkString-4          3000000               431 ns/op            2056 B/op          0 allocs/op
+BenchmarkString-4          5000000               554 ns/op            2409 B/op          0 allocs/op
+BenchmarkString-4          5000000               396 ns/op            2409 B/op          0 allocs/op
+BenchmarkString-4          5000000               497 ns/op            2409 B/op          0 allocs/op
+BenchmarkString-4          3000000               434 ns/op            2056 B/op          0 allocs/op
+PASS
+ok      github.com/vskity/test  51.592s
+</code></pre></li>
+
+<li><p>第三组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4           100000             14030 ns/op           49350 B/op          0 allocs/op
+BenchmarkString-4           200000             11685 ns/op           48196 B/op          0 allocs/op
+BenchmarkString-4           200000             10694 ns/op           48196 B/op          0 allocs/op
+BenchmarkString-4           200000             10535 ns/op           48196 B/op          0 allocs/op
+BenchmarkString-4           200000             11770 ns/op           48196 B/op          0 allocs/op
+BenchmarkString-4           200000              9635 ns/op           48196 B/op          0 allocs/op
+BenchmarkString-4           200000             10930 ns/op           48196 B/op          0 allocs/op
+BenchmarkString-4           200000             10475 ns/op           48196 B/op          0 allocs/op
+BenchmarkString-4           200000             10190 ns/op           48196 B/op          0 allocs/op
+BenchmarkString-4           200000              9964 ns/op           48196 B/op          0 allocs/op
+PASS
+ok      github.com/vskity/test  22.043s
+</code></pre></li>
+</ul>
+
+<h3 id="fmt-sprintf"><strong>fmt.Sprintf()</strong></h3>
+
+<p>代码：</p>
+
+<pre><code>func BenchmarkString(b *testing.B) {
+	str := strings.Repeat(&quot;r&quot;, 8000) // n=[20,400,8000]
+	var dst string
+	for i := 0; i &lt; b.N; i++ {
+		dst = fmt.Sprintf(&quot;%s%s&quot;, dst, str)
+	}
+}
+</code></pre>
+
+<ul>
+<li><p>第一组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4           100000            267938 ns/op         1021320 B/op          3 allocs/op
+BenchmarkString-4            50000            123194 ns/op          517585 B/op          3 allocs/op
+BenchmarkString-4           100000            266215 ns/op         1019798 B/op          3 allocs/op
+BenchmarkString-4           100000            266981 ns/op         1019564 B/op          3 allocs/op
+BenchmarkString-4            50000            123815 ns/op          517719 B/op          3 allocs/op
+BenchmarkString-4           100000            266964 ns/op         1019632 B/op          3 allocs/op
+BenchmarkString-4           100000            266532 ns/op         1018964 B/op          3 allocs/op
+BenchmarkString-4           100000            266196 ns/op         1019921 B/op          3 allocs/op
+BenchmarkString-4           100000            267081 ns/op         1019980 B/op          3 allocs/op
+BenchmarkString-4           100000            266094 ns/op         1019782 B/op          3 allocs/op
+PASS
+ok      github.com/vskity/test  228.182s
+
+</code></pre></li>
+
+<li><p>第二组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4            10000            590087 ns/op         2077092 B/op          3 allocs/op
+BenchmarkString-4            10000            583969 ns/op         2062952 B/op          3 allocs/op
+BenchmarkString-4            10000            601773 ns/op         2078758 B/op          3 allocs/op
+BenchmarkString-4            10000            580328 ns/op         2060216 B/op          3 allocs/op
+BenchmarkString-4            10000            580785 ns/op         2054241 B/op          3 allocs/op
+BenchmarkString-4            10000            580849 ns/op         2061007 B/op          3 allocs/op
+BenchmarkString-4            10000            580618 ns/op         2052596 B/op          3 allocs/op
+BenchmarkString-4            10000            582241 ns/op         2061667 B/op          3 allocs/op
+BenchmarkString-4            10000            583660 ns/op         2062722 B/op          3 allocs/op
+BenchmarkString-4            10000            583248 ns/op         2056687 B/op          3 allocs/op
+PASS
+ok      github.com/vskity/test  58.537s
+
+</code></pre></li>
+
+<li><p>第三组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4            10000          12246234 ns/op        41626158 B/op          3 allocs/op
+BenchmarkString-4            10000          12167390 ns/op        41675106 B/op          3 allocs/op
+BenchmarkString-4            10000          12115710 ns/op        41509446 B/op          3 allocs/op
+BenchmarkString-4            10000          11999742 ns/op        41561282 B/op          3 allocs/op
+BenchmarkString-4         *** Test killed: ran too long (10m0s).
+FAIL    github.com/vskity/test  600.151s
+
+</code></pre></li>
+</ul>
+
+<h3 id="buf-write"><strong>buf.Write()</strong></h3>
+
+<p>代码:</p>
+
+<pre><code>func BenchmarkString(b *testing.B) {
+	str := strings.Repeat(&quot;r&quot;, 20) // n=[20,400,8000]
+	var dst = bytes.Buffer{}
+
+	for i := 0; i &lt; b.N; i++ {
+		dst.WriteString(str)
+	}
+	dst.Reset()
+}
+</code></pre>
+
+<ul>
+<li><p>第一组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4         50000000                35.7 ns/op            56 B/op          0 allocs/op
+BenchmarkString-4         50000000                28.1 ns/op            56 B/op          0 allocs/op
+BenchmarkString-4         50000000                25.5 ns/op            56 B/op          0 allocs/op
+BenchmarkString-4         50000000                24.8 ns/op            56 B/op          0 allocs/op
+BenchmarkString-4         50000000                26.0 ns/op            56 B/op          0 allocs/op
+BenchmarkString-4         50000000                27.1 ns/op            56 B/op          0 allocs/op
+BenchmarkString-4         100000000               36.3 ns/op            56 B/op          0 allocs/op
+BenchmarkString-4         100000000               28.6 ns/op            56 B/op          0 allocs/op
+BenchmarkString-4         50000000                27.6 ns/op            56 B/op          0 allocs/op
+BenchmarkString-4         50000000                28.1 ns/op            56 B/op          0 allocs/op
+PASS
+ok      github.com/vskity/test  18.392s
+</code></pre></li>
+
+<li><p>第二组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4          5000000              1853 ns/op            1342 B/op          0 allocs/op
+BenchmarkString-4          5000000              1387 ns/op            1342 B/op          0 allocs/op
+BenchmarkString-4          5000000               446 ns/op            1342 B/op          0 allocs/op
+BenchmarkString-4          5000000               472 ns/op            1342 B/op          0 allocs/op
+BenchmarkString-4          5000000               452 ns/op            1342 B/op          0 allocs/op
+BenchmarkString-4          5000000               329 ns/op            1342 B/op          0 allocs/op
+BenchmarkString-4         runtime: VirtualAlloc of 6710886400 bytes failed with errno=1455
+fatal error: out of memory
+
+</code></pre></li>
+
+<li><p>第三组</p>
+
+<pre><code>goos: windows
+goarch: amd64
+pkg: github.com/vskity/test
+BenchmarkString-4           200000              9209 ns/op           20971 B/op          0 allocs/op
+BenchmarkString-4           200000              7065 ns/op           20971 B/op          0 allocs/op
+BenchmarkString-4           200000              5969 ns/op           20971 B/op          0 allocs/op
+BenchmarkString-4           200000              6280 ns/op           20971 B/op          0 allocs/op
+BenchmarkString-4           200000              6579 ns/op           20971 B/op          0 allocs/op
+BenchmarkString-4           200000              5935 ns/op           20971 B/op          0 allocs/op
+BenchmarkString-4           200000              5970 ns/op           20971 B/op          0 allocs/op
+BenchmarkString-4           200000              6385 ns/op           20971 B/op          0 allocs/op
+BenchmarkString-4           200000              5364 ns/op           20971 B/op          0 allocs/op
+BenchmarkString-4           200000              5270 ns/op           20971 B/op          0 allocs/op
+PASS
+ok      github.com/vskity/test  13.962s
+</code></pre></li>
+</ul>
+
+    </section>
+
+    
+    <section class="post-tags" style="padding-bottom:60px;">
+        <div class="post-meta tags">
+            <i class="fa fa-fw fa-tag"></i>
+            
+                
+                <a href="//vskity.cn/tags/%E6%B5%8B%E8%AF%95">测试 </a>
+            
+                
+                <a href="//vskity.cn/tags/string">string </a>
+            
+                
+                <a href="//vskity.cn/tags/benchmark">benchmark </a>
+            
+                
+                <a href="//vskity.cn/tags/golang">Golang </a>
+            
+        </div>
+    </section>
+    
+    
+    <section class="share">
+    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head"> Back to top</a></p>
+    <p class="info prompt">Share</p>
+    <a href="http://twitter.com/share?text=String%e8%bf%9e%e6%8e%a5%e6%80%a7%e8%83%bd%e6%b5%8b%e8%af%95&url=%2f%2fvskity.cn%2fpost%2fbenchmarkstring%2f" title="Share on Twitter"
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <i class="fa fa-2x fa-fw fa-twitter-square"></i> <span class="hidden">Twitter</span>
+    </a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2f%2fvskity.cn%2fpost%2fbenchmarkstring%2f" title="Share on Facebook"
+        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i> <span class="hidden">Facebook</span>
+    </a>
+    <a href="https://plus.google.com/share?url=%2f%2fvskity.cn%2fpost%2fbenchmarkstring%2f" title="Share on Google+"
+       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <i class="fa fa-2x fa-fw fa-google-plus-square" style="margin-left: -8px"></i> <span class="hidden">Google+</span>
+    </a>
+</section>
+
+    <footer class="post-footer">
+        <section class="author">
+    <div class="authorimage" style="background: url(//vskity.cn/img/avatar.jpg)"></div>
+    <h4>vskity</h4>
+    <p class="bio">programmer - golang</p>
+    <p class="meta">
+      
+    </p>
+</section>
+    </footer>
+    
+</article>
+
+    </main>
+
+    <footer class="site-footer">
+	<div class="inner">
+		<section class="footer-social">
+      
+      
+      
+      
+      
+      
+      <a href="//github.com/vskity" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i> <span class="hidden">GitHub</span></a>&nbsp;
+      
+      
+      
+      
+  </section>
+
+		<section class="copyright">&copy; 2018 <a href="//vskity.cn/">vskity</a>. Released under the MIT license.</section>
+	</div>
+</footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//vskity.cn/js/index.js"></script>
+<script src="//vskity.cn/js/smooth-scroll.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+
+
+<script>
+    smoothScroll.init({
+        speed: 800,
+        easing: 'easeInOutCubic',
+        updateURL: false,
+        offset: 125,
+    });
+</script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-100632159-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>c&#43;&#43;编写一个自己的EOS合约 &middot; vskity</title>
+    <meta name="author" content="vskity">
+    <meta name="description" content="Every noble work is at first impossible.">
+    <meta name="generator" content="Hugo 0.40.3" />
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- RSS autodiscovery -->
+    
+
+    <link rel="shortcut icon" href="//vskity.cn/img/favicon.ico">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="//vskity.cn/css/screen.css">
+    <link rel="stylesheet" href="//vskity.cn/css/github.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+    
+
+    
+    <link rel="shortcut icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    
+
+    <!-- Stylesheet for theme color -->
+    <style type="text/css">
+    a, a:visited {color: #33cc99;}
+    .pagination a {color: #33cc99;}
+    .gist .gist-file .gist-meta a:visited {color: #33cc99 !important;}
+    a:focus, a:hover {color: #178b6b;}
+    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #178b6b;}
+    .older-posts:hover, .newer-posts:hover {color: #178b6b;}
+</style>
+</head>
+
+<body class="home-template">
+    <header id="site-head">
+	
+	<h1 class="blog-title"><a href="//vskity.cn/">vskity&rsquo;s blog</a></h1>
+	
+	
+</header>
+    
+<nav class="menu" role="nav">
+    <ul>
+        
+        	<li class="nav nav-current"><a href="//vskity.cn/about/">About me</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/phabricator/">Docker中phabricator搭建配置</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-01/">EOS介绍</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-02/">EOS搭建单节点测试网络</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-03/">EOS智能合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/nat/">NAT</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/benchmarkstring/">String连接性能测试</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-04/">c&#43;&#43;编写一个自己的EOS合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/golang_variable/">golang变量</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/question/">一些常见的问题</a></li>
+      	
+    </ul>
+</nav>
+
+    
+    <main class="content" role="main">
+    
+<article class="post">
+    <header>
+        <h1 class="post-title">c&#43;&#43;编写一个自己的EOS合约</h1>
+        <div class="post-meta">
+            <time datetime="10 May 2018">
+                10 May 2018
+            </time>
+        </div>
+    </header>
+
+    <section class="post-content">
+        
+
+<ul>
+<li>启动单链</li>
+</ul>
+
+<p>直接启动<strong>nodeos</strong>这一部分已经讲述，这里不再重复。</p>
+
+<ul>
+<li>新建<strong>hello</strong>文件夹 <code>mkdir hello</code></li>
+<li>新建文件<strong>hello.cpp</strong> <code>touch hello.cpp</code></li>
+<li>编写合约代码,代码如下：</li>
+</ul>
+
+<pre><code class="language-c++">  #include &lt;eosiolib/eosio.hpp&gt;
+  #include &lt;eosiolib/print.hpp&gt;
+  using namespace eosio;
+  
+  class hello : public eosio::contract {
+    public:
+        using contract::contract;
+  
+        /// @abi action 
+        void hi( account_name user ) {
+           print( &quot;Hello, &quot;, name{user} );
+        }
+  };
+  
+  EOSIO_ABI( hello, (hi) )
+</code></pre>
+
+<ul>
+<li>编译合约文件，编译成<strong>web assembly</strong>文件
+<br /></li>
+</ul>
+
+<p><code>eosiocpp -o hello.wast hello.cpp</code></p>
+
+<p>编译会有很多提示后者警告，先不用管</p>
+
+<ul>
+<li>生成<strong>abi</strong>文件</li>
+</ul>
+
+<p><code>eosiocpp -g hello.abi hello.cpp</code></p>
+
+<ul>
+<li>上传合约代码
+<code>$ cleos set contract tom ../hello -p tom</code></li>
+</ul>
+
+<pre><code class="language-bash">  Reading WAST/WASM from ../hello/hello.wast...
+  Assembling WASM...
+  Publishing contract...
+  executed transaction: 62773f216bd6c7343941d1d636353d1ac03e6e4fba9ef3b1aa4d84245f60254b  1640 bytes  2200576 cycles
+  #         eosio &lt;= eosio::setcode               {&quot;account&quot;:&quot;tom&quot;,&quot;vmtype&quot;:0,&quot;vmversion&quot;:0,&quot;code&quot;:&quot;0061736d0100000001370b60027f7e0060027e7e0060017f00...
+  #         eosio &lt;= eosio::setabi                {&quot;account&quot;:&quot;tom&quot;,&quot;abi&quot;:{&quot;types&quot;:[],&quot;structs&quot;:[{&quot;name&quot;:&quot;hi&quot;,&quot;base&quot;:&quot;&quot;,&quot;fields&quot;:[{&quot;name&quot;:&quot;user&quot;,&quot;type&quot;...
+</code></pre>
+
+<ul>
+<li>调用一下合约</li>
+</ul>
+
+<p><code>$ cleos push action tom hi '[&quot;eos&quot;]' -p tom</code></p>
+
+<pre><code class="language-bash">  executed transaction: 8353f50689ab11a0ca8b70129bc01cb205cf065aebe0fe33ae533935263b2d67  232 bytes  102400 cycles
+  #           tom &lt;= tom::hi                      {&quot;user&quot;:&quot;eos&quot;}
+  &gt;&gt; Hello, eos
+
+  $ cleos push action tom hi '[&quot;bob&quot;]' -p bob
+  executed transaction: fa94bb8bf80871544a99eaecf34bed90fa38359167d9a657f34ba51e14ef0789  232 bytes  102400 cycles
+  #           tom &lt;= tom::hi                      {&quot;user&quot;:&quot;bob&quot;}
+  &gt;&gt; Hello, bob
+</code></pre>
+
+<h2 id="改进">改进</h2>
+
+<p>通过上面的合约你会发现，所有人都有可以随意调用<strong>tom::hi()</strong>，输出任意名字  <br />
+我们为合约添加权限，我们对<strong>hi()</strong>函数进行改造，在函数第一行添加<code>require_auth( user );</code></p>
+
+<pre><code class="language-c++">void hi( account_name user ) {
+    require_auth( user );
+    print( &quot;Hello, &quot;, name{user} );
+}
+</code></pre>
+
+<p>再次执行上述步骤，编译wast,bai、上传、调用</p>
+
+<pre><code class="language-bash">$ cleos push action tom hi '[&quot;bob&quot;]' -p bob
+executed transaction: 3a821865ec1f091c1d0b92937c6cac791d39f931574fc6c869a8f0555b0b4cf9  232 bytes  102400 cycles
+#           tom &lt;= tom::hi                      {&quot;user&quot;:&quot;bob&quot;}
+&gt;&gt; Hello, bob
+
+
+$ cleos push action tom hi '[&quot;tom&quot;]' -p bob
+Error 3030001: missing required authority
+Ensure that you have the related authority inside your transaction!;
+If you are currently using 'cleos push action' command, try to add the relevant authority using -p option.
+Error Details:
+missing authority of tom
+</code></pre>
+
+<p>发现只能输出自己的名字了。</p>
+
+    </section>
+
+    
+    <section class="post-tags" style="padding-bottom:60px;">
+        <div class="post-meta tags">
+            <i class="fa fa-fw fa-tag"></i>
+            
+                
+                <a href="//vskity.cn/tags/eos">EOS </a>
+            
+                
+                <a href="//vskity.cn/tags/blockchain">Blockchain </a>
+            
+                
+                <a href="//vskity.cn/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6">智能合约 </a>
+            
+                
+                <a href="//vskity.cn/tags/c&#43;&#43;">c&#43;&#43; </a>
+            
+        </div>
+    </section>
+    
+    
+    <section class="share">
+    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head"> Back to top</a></p>
+    <p class="info prompt">Share</p>
+    <a href="http://twitter.com/share?text=c%2b%2b%e7%bc%96%e5%86%99%e4%b8%80%e4%b8%aa%e8%87%aa%e5%b7%b1%e7%9a%84EOS%e5%90%88%e7%ba%a6&url=%2f%2fvskity.cn%2fpost%2feos-04%2f" title="Share on Twitter"
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <i class="fa fa-2x fa-fw fa-twitter-square"></i> <span class="hidden">Twitter</span>
+    </a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2f%2fvskity.cn%2fpost%2feos-04%2f" title="Share on Facebook"
+        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i> <span class="hidden">Facebook</span>
+    </a>
+    <a href="https://plus.google.com/share?url=%2f%2fvskity.cn%2fpost%2feos-04%2f" title="Share on Google+"
+       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <i class="fa fa-2x fa-fw fa-google-plus-square" style="margin-left: -8px"></i> <span class="hidden">Google+</span>
+    </a>
+</section>
+
+    <footer class="post-footer">
+        <section class="author">
+    <div class="authorimage" style="background: url(//vskity.cn/img/avatar.jpg)"></div>
+    <h4>vskity</h4>
+    <p class="bio">programmer - golang</p>
+    <p class="meta">
+      
+    </p>
+</section>
+    </footer>
+    
+</article>
+
+    </main>
+
+    <footer class="site-footer">
+	<div class="inner">
+		<section class="footer-social">
+      
+      
+      
+      
+      
+      
+      <a href="//github.com/vskity" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i> <span class="hidden">GitHub</span></a>&nbsp;
+      
+      
+      
+      
+  </section>
+
+		<section class="copyright">&copy; 2018 <a href="//vskity.cn/">vskity</a>. Released under the MIT license.</section>
+	</div>
+</footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//vskity.cn/js/index.js"></script>
+<script src="//vskity.cn/js/smooth-scroll.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+
+
+<script>
+    smoothScroll.init({
+        speed: 800,
+        easing: 'easeInOutCubic',
+        updateURL: false,
+        offset: 125,
+    });
+</script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-100632159-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>一些常见的问题 &middot; vskity</title>
+    <meta name="author" content="vskity">
+    <meta name="description" content="Every noble work is at first impossible.">
+    <meta name="generator" content="Hugo 0.40.3" />
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- RSS autodiscovery -->
+    
+
+    <link rel="shortcut icon" href="//vskity.cn/img/favicon.ico">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="//vskity.cn/css/screen.css">
+    <link rel="stylesheet" href="//vskity.cn/css/github.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+    
+
+    
+    <link rel="shortcut icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="//vskity.cn/favicon.ico">
+    
+
+    <!-- Stylesheet for theme color -->
+    <style type="text/css">
+    a, a:visited {color: #33cc99;}
+    .pagination a {color: #33cc99;}
+    .gist .gist-file .gist-meta a:visited {color: #33cc99 !important;}
+    a:focus, a:hover {color: #178b6b;}
+    h1.post-title a:focus, h1.post-title a:hover, h1.blog-title a:focus, h1.blog-title a:hover {color: #178b6b;}
+    .older-posts:hover, .newer-posts:hover {color: #178b6b;}
+</style>
+</head>
+
+<body class="home-template">
+    <header id="site-head">
+	
+	<h1 class="blog-title"><a href="//vskity.cn/">vskity&rsquo;s blog</a></h1>
+	
+	
+</header>
+    
+<nav class="menu" role="nav">
+    <ul>
+        
+        	<li class="nav nav-current"><a href="//vskity.cn/about/">About me</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/phabricator/">Docker中phabricator搭建配置</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-01/">EOS介绍</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-02/">EOS搭建单节点测试网络</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-03/">EOS智能合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/nat/">NAT</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/benchmarkstring/">String连接性能测试</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/eos-04/">c&#43;&#43;编写一个自己的EOS合约</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/golang_variable/">golang变量</a></li>
+      	
+        	<li class="nav nav-current"><a href="//vskity.cn/post/question/">一些常见的问题</a></li>
+      	
+    </ul>
+</nav>
+
+    
+    <main class="content" role="main">
+    
+<article class="post">
+    <header>
+        <h1 class="post-title">一些常见的问题</h1>
+        <div class="post-meta">
+            <time datetime="30 November 2017">
+                30 November 2017
+            </time>
+        </div>
+    </header>
+
+    <section class="post-content">
+        
+
+<h1 id="面试题-一些常见的问题">面试题 一些常见的问题</h1>
+
+<ol>
+<li><p>智能指针的原理，常用的智能指针</p>
+
+<p>原文在这里<a href="https://www.cnblogs.com/wxquare/p/4759020.html">C++11中智能指针的原理、使用、实现</a></p>
+
+<p>C++程序设计中使用堆内存是非常频繁的操作，堆内存的申请和释放都由程序员自己管理。程序员自己管理堆内存可以提高了程序的效率，但是整体来说堆内存的管理是麻烦的，C++11中引入了智能指针的概念，方便管理堆内存。使用普通指针，容易造成堆内存泄露（忘记释放），二次释放，程序发生异常时内存泄露等问题等，使用智能指针能更好的管理堆内存。</p>
+
+<p>理解智能指针需要从下面三个层次：</p>
+
+<ul>
+<li>从较浅的层面看，智能指针是利用了一种叫做RAII（资源获取即初始化）的技术对普通的指针进行封装，这使得智能指针实质是一个对象，行为表现的却像一个指针。</li>
+<li>智能指针的作用是防止忘记调用delete释放内存和程序异常的进入catch块忘记释放内存。另外指针的释放时机也是非常有考究的，多次释放同一个指针会造成程序崩溃，这些都可以通过智能指针来解决。</li>
+
+<li><p>智能指针还有一个作用是把值语义转换成引用语义。C++和Java有一处最大的区别在于语义不同，在Java里面下列代码：</p>
+
+<pre><code class="language-java">　　Animal a = new Animal();
+　　Animal b = a;
+</code></pre>
+
+<p>你当然知道，这里其实只生成了一个对象，a和b仅仅是把持对象的引用而已。
+但在C++中不是这样，</p>
+
+<pre><code class="language-c++">    Animal a;
+    Animal b = a;
+</code></pre>
+
+<p>这里却是就是生成了两个对象。</p></li>
+</ul></li>
+
+<li><p>C++的4种类型转换方式</p>
+
+<ul>
+<li><p>static_cast</p>
+
+<p>最常用的类型转换符，在正常状况下的类型转换，如把int转换为float，如：<code>int i；float f； f=（float）i；</code>或者<code>f=static_cast&lt;float&gt;(i);</code></p></li>
+
+<li><p>const_cast</p>
+
+<p>用于取出const属性，把const类型的指针变为非const类型的指针，如：<code>const int *fun(int x,int y){} int *ptr=const_cast&lt;int *&gt;(fun(2.3))</code></p></li>
+
+<li><p>dynamic_cast</p>
+
+<p>该操作符用于运行时检查该转换是否类型安全，但只在多态类型时合法，即该类至少具有一个虚拟方法。dynamic_cast与static_cast具有相同的基本语法，dynamic_cast主要用于类层次间的上行转换和下行转换，还可以用于类之间的交叉转换。在类层次间进行上行转换时，dynamic_cast和static_cast的效果是一样的；在进行下行转换时，dynamic_cast具有类型检查的功能，比static_cast更安全。如：</p>
+
+<pre><code class="language-c++">class C
+
+{
+　　//…C没有虚拟函数
+}；
+class T{
+　　//…
+}
+int main()
+{
+　　dynamic_cast&lt;T*&gt; (new C);//错误
+}
+此时如改为以下则是合法的：
+class C
+
+{
+public:
+　　virtual void m() {};// C现在是 多态
+}
+</code></pre></li>
+
+<li><p>reinterpret_cast</p>
+
+<p>interpret是解释的意思，reinterpret即为重新解释，此标识符的意思即为数据的二进制形式重新解释，但是不改变其值。如：<code>int i; char *ptr=&quot;hello freind!&quot;; i=reinterpret_cast&lt;int&gt;(ptr);</code>这个转换方式很少使用。</p></li>
+</ul></li>
+
+<li><p>进程间的通信方式</p>
+
+<ul>
+<li><p>无名管道( pipe )：管道是一种半双工的通信方式，数据只能单向流动，而且只能在具有亲缘关系的进程间使用。进程的亲缘关系通常是指父子进程关系。</p></li>
+
+<li><p>高级管道(popen)：将另一个程序当做一个新的进程在当前程序进程中启动，则它算是当前程序的子进程，这种方式我们成为高级管道方式。</p></li>
+
+<li><p>有名管道 (named pipe) ： 有名管道也是半双工的通信方式，但是它允许无亲缘关系进程间的通信。</p></li>
+
+<li><p>消息队列( message queue ) ： 消息队列是由消息的链表，存放在内核中并由消息队列标识符标识。消息队列克服了信号传递信息少、管道只能承载无格式字节流以及缓冲区大小受限等缺点。</p></li>
+
+<li><p>信号量( semophore ) ： 信号量是一个计数器，可以用来控制多个进程对共享资源的访问。它常作为一种锁机制，防止某进程正在访问共享资源时，其他进程也访问该资源。因此，主要作为进程间以及同一进程内不同线程之间的同步手段。</p></li>
+
+<li><p>信号 ( sinal ) ： 信号是一种比较复杂的通信方式，用于通知接收进程某个事件已经发生。</p></li>
+
+<li><p>共享内存( shared memory ) ：共享内存就是映射一段能被其他进程所访问的内存，这段共享内存由一个进程创建，但多个进程都可以访问。共享内存是最快的 IPC 方式，它是针对其他进程间通信方式运行效率低而专门设计的。它往往与其他通信机制，如信号两，配合使用，来实现进程间的同步和通信。</p></li>
+
+<li><p>套接字( socket ) ： 套解口也是一种进程间通信机制，与其他通信机制不同的是，它可用于不同机器间的进程通信。</p></li>
+</ul></li>
+
+<li><p>Linux C/C++实现daemon进程
+&gt; 原文地址:
+&gt;
+&gt; <a href="https://www.cnblogs.com/itech/archive/2011/01/17/1937447.html">在Linux下编写Daemon</a>
+&gt;
+&gt; <a href="http://blog.csdn.net/fall221/article/details/45420197">Linux daemon进程的应用、实现和原理</a></p>
+
+<ul>
+<li><p>C/C++可以直接调用int daemon(int, int)函数，不需要自己重新实现</p>
+
+<pre><code class="language-c++">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;iostream&gt;
+
+int main(int argc, char *argv[]) {
+    if (argc &lt; 3) {
+        printf(&quot;Usage: $0 no_ch_dir no_close_fd\n&quot;);
+        exit(0);
+    }
+
+    int no_ch_dir = atoi(argv[1]);
+    int no_close_fd = atoi(argv[2]);
+
+    std::cout &lt;&lt; &quot;main pid : &quot; &lt;&lt; getpid() &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;main parent pid : &quot; &lt;&lt; getppid() &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;main pwd : &quot; &lt;&lt; get_current_dir_name() &lt;&lt; std::endl;
+    if (daemon(no_ch_dir, no_close_fd) != 0) {
+        // 一般都用daemon(0,0)
+        // 成功返回0，失败返回-1
+        // daemon(0,0)：chdir到/，关闭0,1,2描述符。
+        std::cout &lt;&lt; &quot;stdout: daemon = -1&quot; &lt;&lt; std::endl;
+        std::cerr &lt;&lt; &quot;stderr: daemon = -1&quot; &lt;&lt; std::endl;
+        return 1;
+    }
+    std::cout &lt;&lt; &quot;stdout: daemon = 0&quot; &lt;&lt; std::endl;
+    std::cerr &lt;&lt; &quot;stderr: daemon = 0&quot; &lt;&lt; std::endl;
+
+    std::cout &lt;&lt; &quot;sub pid : &quot; &lt;&lt; getpid() &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;sub parent pid : &quot; &lt;&lt; getppid() &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;sub pwd : &quot; &lt;&lt; get_current_dir_name() &lt;&lt; std::endl;
+    while (1);
+    return 0;
+}
+</code></pre></li>
+
+<li><p>deamon的另一种实现,不使用/etc/rc.d/init.d/functions中的daemon</p>
+
+<ol>
+<li>程序运行后调用fork，并让父进程退出。子进程获得一个新的进程ID，但继承了父进程的进程组ID。</li>
+<li>调用setsid创建一个新的session，使自己成为新session和新进程组的leader，并使进程没有控制终端(tty)。</li>
+<li>设置文件创建mask为0，避免创建文件时权限的影响。</li>
+<li>关闭不需要的打开文件描述符。因为Daemon程序在后台执行，不需要于终端交互，通常就关闭STDIN、STDOUT和STDERR。其它根据实际情况处理。</li>
+<li>aemon无法输出信息，可以使用SYSLOG或自己的日志系统进行日志处理。（可选）</li>
+<li>编写管理Daemon的SHELL脚本，使用service对Daemon进行管理和监控。（可选）</li>
+</ol></li>
+</ul></li>
+
+<li><p>Linux环境下并发服务器的几种实现模型</p>
+
+<ol>
+<li><p>多进程并发服务器</p>
+
+<p>在Linux环境下多进程的应用很多,其中最主要的就是网络/客户服务器。多进程服务器是当客户有请求时 ,服务器用一个子进程来处理客户请求。父进程继续等待其它客户的请求。这种方法的优点是当客户有请求时 ,服务器能及时处理客户 ,特别是在客户服务器交互系统中。对于一个 TCP服务器,客户与服务器的连接可能并不马上关闭 ,可能会等到客户提交某些数据后再关闭 ,这段时间服务器端的进程会阻塞 ,所以这时操作系统可能调度其它客户服务进程。比起循环服务器大大提高了服务性能。</p>
+
+<p>TCP多进程并发服务器,TCP并发服务器的思想是每一个客户机的请求并不由服务器直接处理，而是由服务器创建一个子进程来处理。</p>
+
+<pre><code class="language-c">socket(...);
+bind(...);
+listen(...);
+while(1)
+{
+accpet(...);
+if(fork(...) == 0)
+{
+    process(...);
+    close(...);
+    exit(...);
+}
+close(...);
+}
+</code></pre></li>
+
+<li><p>多线程服务器</p>
+
+<p>多线程服务器是对多进程的服务器的改进 ,由于多进程服务器在创建进程时要消耗较大的系统资源 ,所以用线程来取代进程 ,这样服务处理程序可以较快的创建。据统计 ,创建线程与创建进程要快 10100 倍 ,所以又把线程称为“轻量级”进程。线程与进程不同的是:一个进程内的所有线程共享相同的全局内存、全局变量等信息。这种机制又带来了同步问题。以下是多线程服务器模板:</p>
+
+<pre><code class="language-c">socket(...);
+bind(...);
+listen(...);
+while(1)
+{
+accpet(...);
+if((pthread_create(...))!==-1)
+{
+    process(...);
+    close(...);
+    exit(...);
+}
+close(...);
+}
+</code></pre></li>
+
+<li><p>I/O复用服务器</p>
+
+<p>I/ O复用技术是为了解决进程或线程阻塞到某个 I/ O系统调用而出现的技术 ,使进程不阻塞于某个特定的I/ O系统调用。它也可用于并发服务器的设计，常用函数select 或 poll或者epoll来实现。</p>
+
+<ol>
+<li><p>使用select实现</p>
+
+<pre><code class="language-c">socket(...);
+bind(...);
+listen(...);
+while(1)
+{
+if(select(...)&gt;0)
+if(FD_ISSET(...)&gt;0)
+        {
+accpet(...);
+            process(...);
+}
+close(...);
+}
+</code></pre></li>
+
+<li><p>使用epoll实现</p>
+
+<pre><code class="language-c">socket(...);
+bind(...);
+listen(...);
+epoll_create(...);
+epoll_ctl(...) //EPOLL_CTL_ADD  listenFd;
+while(1)
+{
+if(epoll_wait(...)&gt;0)
+{
+    for(...)
+    {
+        if(fd==listenFd)
+        {
+            accpet(...);
+        epoll_ctl(...) //EPOLL_CTL_ADD  clientFd;
+        }
+    esle
+    {
+        process(...);
+    }
+}
+close(...);
+}
+</code></pre></li>
+</ol></li>
+</ol></li>
+</ol>
+
+    </section>
+
+    
+    <section class="post-tags" style="padding-bottom:60px;">
+        <div class="post-meta tags">
+            <i class="fa fa-fw fa-tag"></i>
+            
+                
+                <a href="//vskity.cn/tags/c&#43;&#43;">C&#43;&#43; </a>
+            
+                
+                <a href="//vskity.cn/tags/linux">Linux </a>
+            
+        </div>
+    </section>
+    
+    
+    <section class="share">
+    <p class="backtotop"><a data-scroll href="#site-head"><i class="fa fa-lg fa-fw fa-angle-double-up"></i></a><a data-scroll class="backtotoptext" href="#site-head"> Back to top</a></p>
+    <p class="info prompt">Share</p>
+    <a href="http://twitter.com/share?text=%e4%b8%80%e4%ba%9b%e5%b8%b8%e8%a7%81%e7%9a%84%e9%97%ae%e9%a2%98&url=%2f%2fvskity.cn%2fpost%2fquestion%2f" title="Share on Twitter"
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <i class="fa fa-2x fa-fw fa-twitter-square"></i> <span class="hidden">Twitter</span>
+    </a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=%2f%2fvskity.cn%2fpost%2fquestion%2f" title="Share on Facebook"
+        onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <i class="fa fa-2x fa-fw fa-facebook-square" style="margin-left: -8px"></i> <span class="hidden">Facebook</span>
+    </a>
+    <a href="https://plus.google.com/share?url=%2f%2fvskity.cn%2fpost%2fquestion%2f" title="Share on Google+"
+       onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <i class="fa fa-2x fa-fw fa-google-plus-square" style="margin-left: -8px"></i> <span class="hidden">Google+</span>
+    </a>
+</section>
+
+    <footer class="post-footer">
+        <section class="author">
+    <div class="authorimage" style="background: url(//vskity.cn/img/avatar.jpg)"></div>
+    <h4>vskity</h4>
+    <p class="bio">programmer - golang</p>
+    <p class="meta">
+      
+    </p>
+</section>
+    </footer>
+    
+</article>
+
+    </main>
+
+    <footer class="site-footer">
+	<div class="inner">
+		<section class="footer-social">
+      
+      
+      
+      
+      
+      
+      <a href="//github.com/vskity" target="_blank" title="GitHub"><i class="fa fa-2x fa-fw fa-github"></i> <span class="hidden">GitHub</span></a>&nbsp;
+      
+      
+      
+      
+  </section>
+
+		<section class="copyright">&copy; 2018 <a href="//vskity.cn/">vskity</a>. Released under the MIT license.</section>
+	</div>
+</footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="//vskity.cn/js/index.js"></script>
+<script src="//vskity.cn/js/smooth-scroll.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+
+
+<script>
+    smoothScroll.init({
+        speed: 800,
+        easing: 'easeInOutCubic',
+        updateURL: false,
+        offset: 125,
+    });
+</script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-100632159-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+</body>
+</html>
